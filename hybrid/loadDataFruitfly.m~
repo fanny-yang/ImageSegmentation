@@ -1,3 +1,0 @@
-X = imread('../data/embryo.png');
-X = mean(X,3);
-figure;imshow(X);
