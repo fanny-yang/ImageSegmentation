@@ -1,0 +1,67 @@
+addpath('../utilities');
+I = imread('./insituAT09943_0.jpe');
+
+kernel_sigma = 1000;
+load('../data/prior/embPrior.mat');
+%% Prior Pre-processing
+Phi = 1 - Phi;
+Phi(Phi>0.5) = 1;
+Phi(Phi<=0.5) =0;
+prior_psis = Phi(:,:,1);
+num_priors = size(prior_psis,3);
+for i = 1:num_priors
+  prior_psis(:,:,i) = imgZoom(prior_psis(:,:,i),.4);
+end
+
+
+% load data
+superpixel = 0;
+loadDataFruitfly;
+I = mean(X,3);
+I = imresize(I,[size(prior_psis,1),size(prior_psis,2)],'nearest');
+I_binary = zeros(size(I));
+I_binary(I>=.35) = 1;
+%load('../data/embDetection/multipleEmbBinary.mat');
+I = I_binary;
+[m,n] = size(I);
+
+figure;imagesc(I);
+se = strel('disk',5);        
+erodedI = imerode(I,se);
+figure;imagesc(erodedI);
+CC = bwconncomp(erodedI);
+num_CC = length(CC.PixelIdxList);
+
+for k = 1:num_CC
+  
+  Itemp = zeros(size(I));
+  Itemp(CC.PixelIdxList{k}) = 1;
+  bdd = bwboundaries(Itemp);
+  figure;imagesc(Itemp); hold on
+  plot(bdd{1}(:,2),bdd{1}(:,1));
+  ell_param = fit_ellipse(bdd{1}(:,2),bdd{1}(:,1));
+
+  yShift = ceil(ell_param.Y0_in - m/2);
+  xShift = ceil(ell_param.X0_in - n/2);
+  if ell_param.a<ell_param.b
+    thetaDegree = 90-ell_param.phi*180/pi;
+  else
+    thetaDegree = -ell_param.phi*180/pi;
+  end
+  mask = imgShift(imgZoom(imrotate(prior_psis(:,:,1),-thetaDegree,'nearest','crop'),.4),yShift,xShift);
+
+  Epsilon = 3;
+  mu = .1;
+  beta = 0;
+  lambda = 0;
+  num_iter = 200;
+  priorWeight = .5;
+
+  param.A = repmat(n/2 + xShift,1,num_priors);
+  param.B = repmat(m/2 + yShift,1,num_priors);
+  param.R = repmat(.4,1,num_priors);
+  param.Theta = repmat(thetaDegree*pi/180,1,num_priors);
+
+  [seg,phi,param] = chanvese_invar(I,mask,num_iter, mu, [], prior_psis, kernel_sigma, Epsilon, beta,lambda,priorWeight,param);
+  pause
+end

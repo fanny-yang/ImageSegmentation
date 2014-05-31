@@ -1,0 +1,21 @@
+function embryo_watershed(img)
+
+% Threshold input image and create binary representation with ROI in white
+level=graythresh(img);
+BW=im2bw(img, level);
+BW=~BW;
+
+% Cityblock distance transform
+% cf. http://stackoverflow.com/questions/7423596/over-segmentation-in-the-marker-controlled-watershed-in-matlab 
+imgDist=-bwdist(~BW,'cityblock');
+% Set background pixels to inf
+imgDist(~BW)=-inf;
+
+% EF: Get rid of remaining surplus local minima
+imgDist2 = imhmin(imgDist, 1);
+
+% Do watershed
+imgLabel=watershed(imgDist2);    
+
+% Show results
+figure;imshow(imgLabel==0,'InitialMagnification','fit')
