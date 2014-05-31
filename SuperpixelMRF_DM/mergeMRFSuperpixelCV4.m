@@ -24,7 +24,7 @@ plot_all = 0; % 0 if you want results only
 plot_int_results = 0; % 1 if you want intermediate results only
 doSuperPixels = 0; %  if new data, set this 1 to run superpixel algorithm
 
-whichHeaviside = 'sin';
+whichHeaviside = 'tan';
 
 %% Prior Pre-processing
 % Load prior
