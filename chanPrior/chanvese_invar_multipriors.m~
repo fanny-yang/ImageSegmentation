@@ -1,6 +1,4 @@
 %function seg = chanvese_shiftInvar(I,mask,num_iter,mu, nodeBelMF, hybrid_b, prior_phis, kernel_sigma, Epsilon,beta,lambda)
-addpath(genpath('../'));
-
 Epsilon = 3;
 kernel_sigma = 1000;
 load('../data/prior/embPrior.mat');
