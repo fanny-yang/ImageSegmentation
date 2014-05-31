@@ -1,0 +1,223 @@
+% boxes with round corners for beamerposter
+% verion: 0.7
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{roundboxlti}
+
+\RequirePackage{calc} 
+\RequirePackage{environ}
+\RequirePackage{tikz}
+\RequirePackage{ifthen}
+\usetikzlibrary{calc}
+\usetikzlibrary{shapes}
+
+
+
+\def\roundboxlti@sepxlti{0.8ex}
+\def\roundboxlti@seplti{0.8ex}
+\def\roundboxlti@radiuslti{0.9ex}
+\def\roundboxlti@transitionlti{0ex}
+\newlength{\roundboxlti@boxlargerthantextlti}
+\setlength{\roundboxlti@boxlargerthantextlti}{1ex}
+
+%Colors
+\newcommand{\settheoremcolorlti}[1]{\def\roundboxlti@theoremltiColor{#1}}
+\def\roundboxlti@theoremltiColor{TUM_orange}
+\newcommand{\setexamplecolorlti}[1]{\def\roundboxlti@exampleltiColor{#1}}
+\def\roundboxlti@exampleltiColor{TUM_gruen}
+
+%aux variables
+\newboolean{bigheaderlineboollti}
+\newboolean{noheaderlineboollti}
+\newboolean{boxinsideotherboxboollti}
+\setboolean{boxinsideotherboxboollti}{false}
+\newlength{\roundboxlti@contentheightlti}
+\newlength{\roundboxlti@headerlineheightlti}
+\newlength{\roundboxlti@bodyheightlti}
+\newlength{\roundboxlti@lengthtmp}
+\newsavebox\roundboxlti@headerlinesaveboxlti
+\newsavebox\roundboxlti@bodysaveboxlti
+\newsavebox\roundboxlti@contentsaveboxlti
+
+
+
+\NewEnviron{blocklti}[1]{%
+  \def\roundboxlti@colorlowerboxlti{white}%
+  \def\roundboxlti@colorupperboxlti{TUM_blau_1}%
+  \blocklticnew{#1}{\BODY}{true}%
+}
+
+\NewEnviron{blockredlti}[1]{%
+  \def\roundboxlti@colorlowerboxlti{white}%
+  \def\roundboxlti@colorupperboxlti{\roundboxlti@theoremltiColor}%
+  \blocklticnew{#1}{\BODY}{true}%
+}
+
+\NewEnviron{theoremlti}[1][]{%
+  \ifthenelse{\boolean{boxinsideotherboxboollti}}%
+  {% width of box so large that rounded corners disappear
+  \setlength{\roundboxlti@boxlargerthantextlti}{\roundboxlti@boxlargerthantextlti+\roundboxlti@sepxlti+\roundboxlti@radiuslti}}{}%
+  %\def\roundboxlti@colorlowerboxlti{\roundboxlti@theoremltiColor!55!white}%
+  \def\roundboxlti@colorlowerboxlti{white}%
+  \def\roundboxlti@colorupperboxlti{\roundboxlti@theoremltiColor}%
+  \blocklticnew{#1}{\textbf{Theorem:} {\textit\BODY}}{true}%
+}
+
+\NewEnviron{examplelti}[1][]{%
+  \ifthenelse{\boolean{boxinsideotherboxboollti}}%
+  {% width of box so large that rounded corners disappear
+  \setlength{\roundboxlti@boxlargerthantextlti}{\roundboxlti@boxlargerthantextlti+\roundboxlti@sepxlti+\roundboxlti@radiuslti}}{}%
+  %\def\roundboxlti@colorlowerboxlti{\roundboxlti@exampleltiColor!55!white}%
+  \def\roundboxlti@colorlowerboxlti{white}%
+  \def\roundboxlti@colorupperboxlti{\roundboxlti@exampleltiColor}%
+  %\blocklticnew{Example:}{{\BODY}}{false}%
+  \blocklticnew{#1}{\BODY}{true}%
+}
+
+\NewEnviron{kexamplelti}[1][Example:]{%
+  \ifthenelse{\boolean{boxinsideotherboxboollti}}%
+  {% width of box so large that rounded corners disappear
+\setlength{\roundboxlti@boxlargerthantextlti}{\roundboxlti@boxlargerthantextlti+\roundboxlti@sepxlti+\roundboxlti@radiuslti}}{}%
+\def\roundboxlti@colorlowerboxlti{\roundboxlti@exampleltiColor!55!white}%
+  \def\roundboxlti@colorupperboxlti{\roundboxlti@exampleltiColor}%
+  \blocklticnew{#1}{{\BODY}}{false}%
+} 
+
+
+\NewEnviron{colorblocklti}[1][TUM_orange!55!white]{%
+  \def\roundboxlti@colorlowerboxlti{#1}%
+  \blocklticnew{}{\BODY}{false}%
+}
+
+\NewEnviron{colorblockdecentlti}[2][TUM_elfenbein!70]{%
+ \ifthenelse{\boolean{boxinsideotherboxboollti}}%
+  {% width of box so large that rounded corners disappear
+  \setlength{\roundboxlti@boxlargerthantextlti}{\roundboxlti@boxlargerthantextlti+\roundboxlti@sepxlti+\roundboxlti@radiuslti}}{}%
+  \def\roundboxlti@colorlowerboxlti{#1}%
+  \def\roundboxlti@colorupperboxlti{#1}%
+  \blocklticnew{}{\structure{\textbf{#2}}\\{\BODY}}{false}%
+}
+
+
+% unfortunately the following redefinition of theorem does not work.
+%\renewenvironment{theorem}[1][Theorem]%
+%{\begin{theoremlti}[#1]}%
+%{\end{theoremlti}}
+  
+  
+
+
+\newcommand{\blockltic}[2]{%
+\tikzstyle{lowerbox}=[%draw=\roundboxlti@colorlowerboxlti,
+fill=\roundboxlti@colorlowerboxlti,outer sep=0pt,minimum width=1.02\textwidth]%
+\tikzstyle{upperbox}=[%draw=\roundboxlti@colorupperboxlti,
+fill=\roundboxlti@colorupperboxlti,outer sep=0pt,minimum width=1.02\textwidth]%
+\tikzstyle{mybox}=[lowerbox,rounded corners=\roundboxlti@radiuslti,inner sep=\roundboxlti@seplti]%
+\tikzstyle{fancytitle}=[upperbox,rounded corners=\roundboxlti@radiuslti,text=white, inner xsep=\roundboxlti@seplti]%
+%
+\vskip.75ex%
+\hspace*{-0.01\textwidth}%
+\begin{tikzpicture}
+\node (corrbox) [lowerbox,minimum height=\roundboxlti@radiuslti] {};
+\node [upperbox,anchor=south,minimum height=\roundboxlti@radiuslti] at (corrbox.north) {};
+\node (box) [mybox,anchor=north] at (corrbox.north) {%
+  \begin{minipage}{\textwidth-\roundboxlti@seplti-\roundboxlti@seplti}%
+    %restore default values
+    \tikzset{minimum width=0mm,draw=black,sharp corners,text=black,inner sep=.3333em, outer sep=.3333em}%
+    \vspace*{0.9ex}#2\vspace*{0.3ex}%
+  \end{minipage}%
+};
+\node[fancytitle,anchor=south] at (box.north) {%
+  \begin{minipage}{\textwidth-\roundboxlti@seplti-\roundboxlti@seplti}%
+    \Large%
+    \vspace*{0.3ex}\rule[1.7ex]{0mm}{0mm}%
+    \centering\textbf{#1}%
+    \rule[-0.6ex]{0mm}{0mm}\vspace*{-0.3ex}%
+  \end{minipage}%
+};
+\path [top color=\roundboxlti@colorupperboxlti,bottom color=\roundboxlti@colorlowerboxlti] ($(box.north west)-(0,\roundboxlti@transitionlti)$) rectangle ($(box.north east)+(0,\roundboxlti@transitionlti)$);
+\end{tikzpicture}%
+}
+
+
+% arguments
+% 1: header text
+% 2: body text
+% 3: header big (true/false)
+%
+\newcommand{\blocklticnew}[3]{%
+\setboolean{bigheaderlineboollti}{#3}
+
+\setboolean{boxinsideotherboxboollti}{true}%
+\setlength{\roundboxlti@lengthtmp}{\totalheightof{{#1}}}%
+\ifthenelse{\lengthtest{\roundboxlti@lengthtmp>0mm}}{\setboolean{noheaderlineboollti}{false}}{\setboolean{noheaderlineboollti}{true}}%
+
+\def\roundboxlti@headerlinelti{%
+\begin{minipage}{\linewidth-\roundboxlti@sepxlti-\roundboxlti@sepxlti}%
+    \ifthenelse{\boolean{bigheaderlineboollti}}{\Large}{}%
+    \vspace*{1.0ex}\rule[1.6ex]{0mm}{0mm}%
+    \ifthenelse{\boolean{bigheaderlineboollti}}{\centering}{}\textbf{\textcolor{white}{#1}}%
+    \rule[-0.6ex]{0mm}{0mm}\vspace*{0.3ex}%
+\end{minipage}%
+}%
+\savebox{\roundboxlti@headerlinesaveboxlti}{\roundboxlti@headerlinelti}
+
+\def\roundboxlti@bodylti{%
+\begin{minipage}{\linewidth-\roundboxlti@sepxlti-\roundboxlti@sepxlti}%
+  \vspace*{1.3ex}
+  \begin{minipage}[b]{\linewidth}%
+  #2%
+  \end{minipage}%
+  \vspace*{1.3ex}
+  %\renewcommand{\fboxsep}{1pt}%
+  %\fbox{\rule[-1.7ex]{0ex}{0ex}}%
+\end{minipage}%
+}%
+\savebox{\roundboxlti@bodysaveboxlti}{\roundboxlti@bodylti}
+
+\def\roundboxlti@contentlti{%
+\begin{minipage}{\linewidth}%
+  \centering%
+  \usebox{\roundboxlti@headerlinesaveboxlti}\\
+  \vspace*{0.2ex}
+  \usebox{\roundboxlti@bodysaveboxlti}%
+\end{minipage}%
+}%
+\savebox{\roundboxlti@contentsaveboxlti}{\roundboxlti@contentlti}
+
+\setlength{\roundboxlti@headerlineheightlti}{\totalheightof{\usebox{\roundboxlti@headerlinesaveboxlti}}}
+\setlength{\roundboxlti@bodyheightlti}{\totalheightof{\usebox{\roundboxlti@bodysaveboxlti}}}
+\setlength{\roundboxlti@contentheightlti}{\totalheightof{\usebox{\roundboxlti@contentsaveboxlti}}}
+
+\vspace*{1.3ex}%
+\hspace*{-\roundboxlti@boxlargerthantextlti}%
+\begin{tikzpicture}
+\ifthenelse{\boolean{noheaderlineboollti}}{%
+  \path[use as bounding box] (0,0) rectangle
+  (\linewidth+2\roundboxlti@boxlargerthantextlti,-\roundboxlti@bodyheightlti);
+  \clip [outer sep=0mm,inner sep=0mm,rounded corners=\roundboxlti@radiuslti]
+  (0,0) rectangle (\linewidth+2\roundboxlti@boxlargerthantextlti,-\roundboxlti@bodyheightlti); 
+  \path[fill=\roundboxlti@colorlowerboxlti]
+  (0,0) rectangle (\linewidth+2\roundboxlti@boxlargerthantextlti,-\roundboxlti@bodyheightlti);
+  \node at (0.5\linewidth+\roundboxlti@boxlargerthantextlti,-0.5\roundboxlti@bodyheightlti)%
+  {\usebox{\roundboxlti@bodysaveboxlti}};%
+  }{%
+  \path[use as bounding box] (0,0) rectangle (\linewidth+2\roundboxlti@boxlargerthantextlti,-\roundboxlti@contentheightlti);
+  \clip [outer sep=0mm,inner sep=0mm,rounded corners=\roundboxlti@radiuslti]
+  (0,0) rectangle (\linewidth+2\roundboxlti@boxlargerthantextlti,-\roundboxlti@contentheightlti);
+  \path[fill=\roundboxlti@colorupperboxlti] (0,0) rectangle
+  (\linewidth+2\roundboxlti@boxlargerthantextlti,-\roundboxlti@headerlineheightlti);
+  \path[fill=\roundboxlti@colorlowerboxlti] (0,-\roundboxlti@headerlineheightlti)
+  rectangle (\linewidth+2\roundboxlti@boxlargerthantextlti,- \roundboxlti@contentheightlti);
+  \path [top color=\roundboxlti@colorupperboxlti,bottom color=\roundboxlti@colorlowerboxlti] 
+  (0,- \roundboxlti@headerlineheightlti+\roundboxlti@transitionlti) rectangle
+  (\linewidth+2\roundboxlti@boxlargerthantextlti,-\roundboxlti@headerlineheightlti-\roundboxlti@transitionlti);
+  \node at (0.5\linewidth+\roundboxlti@boxlargerthantextlti,-0.5\roundboxlti@contentheightlti) {\usebox{\roundboxlti@contentsaveboxlti}};%
+  }%
+\end{tikzpicture}
+
+
+}
+
+
+

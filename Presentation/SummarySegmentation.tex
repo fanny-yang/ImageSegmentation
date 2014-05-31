@@ -1,0 +1,477 @@
+\documentclass{article} % For LaTeX2e
+\usepackage{nips, times}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{color}
+\usepackage{relsize}
+\usepackage{placeins}
+\usepackage{natbib}
+\usepackage{paralist}
+\usepackage{bbm}
+\usepackage{subfigure}
+\usepackage{multirow}
+\usepackage{enumitem}
+\usepackage[toc,page]{appendix}
+
+\renewcommand{\null}{\operatorname{null}}
+\newcommand{\given}{\,|\,}
+
+\input math.tex
+
+\nipsfinalcopy
+
+\begin{document}
+\title{Image Segmentation using superpixel based MRF and shape priors}
+
+\author{
+Fanny Yang\\
+University of California\\
+Berkeley, CA 94720, USA\\
+\texttt{fanny-yang@eecs.berkeley.edu} \\
+\And
+Siqi Wu\\
+University of California\\
+Berkeley, CA 94720, USA\\
+\texttt{siqi@stat.berkeley.edu}\\
+}
+
+\maketitle
+
+\section{Introduction}
+Gene expression analysis relies on photographic material of fruitfly embryos. However for each embryo, a different embryo had to be used. Especially in later stages of the development the organs like mouth, gut and the yolk all lie in slightly different locations and have different shapes. In order to achieve comparability of the gene expressions in these different variations one needs to map the embryos to a standard template. One measure to achieve this is to segment the different organs and derive a map thereof. 
+
+In the problem that we tried to tackle, the embryos are already considered to be in the same position and right rotation. The code had already been written to achieve that. Therefore one is left with the image segmentation task within the embryo, where the organs are very hard to discern even for the human eye. This is for example due to almost very little intensity variation and almost no color information.
+
+In the following I will quickly outline a few commonly used image segmentation algorithms which are relevant for this paper and some difficulties when applying them to the current problem. This will then lead to the motivation for the proposed algorithm which combines some of the ideas to form a new segmentation algorithm.
+
+\section{Previous works}
+All of the models have in common that they the segmentation task is equivalent to the minimization of some energy cost function, with each of them having an equivalent interpretation in terms of maximizing a posterior distribution. 
+
+\paragraph{Deformable models}
+For example, one line of method, categorized in this paper as deformable models is based on the idea of Snakes \cite{Kass88_Snakes, Cootes92_ActiveShape,Cootes01_ActiveApp, Cootes92_TrainingShape}, also called ``Active Contours''. The decision variable they optimize over is a parameterized contour $c(s)$, by a point distribution model. In the very early and simple model, the energy consists of the length and smoothness of the curve which is the internal energy (image independent), and a term called the external energy which measures how much it is consistent with the edge image, i.e.
+\beqs
+E(\tilde{I},c) = E_{ext}(c) + E_{int}(I,c) = \int_0^1 \tilde{I}(c(s))\d s  + \int_{\Omega} \alpha(s)|c'(s)|^2 + \beta(s)|c''(s)|^2\d s
+\eeqs
+where $\tilde{I}$ here is the edge image.
+
+%\cite{Sclaroff01_RegionGroup, ElBaz09_ShapeApp}
+% Level set 
+Since the parameterization of the curve is usually cumbersome, people have proposed modelling the contour $c$ as the zero level set of a continuous function $\phi(x,y)$ \cite{Leventon00_ShapeGeodesic, ChanVese01, MumfordShah89,Cremers07_Levelreview, Tsai03_MILevelSets}. The energy minimization decision variable is then a function which thus requires techniques from functional analysis, in particular partial differential equations (PDE) e.g. using Euler-Lagrange equations. Later this framework was extended to enable incorporation of shape and intensity priors \cite{Cremers06_KernelDensity, Chan05_LevelShape, Chen09_LevelShapeIntensity}.
+
+The advantages of level set segmentation methods are that, if correctly used, can be used to find global optima 
+%Good:
+%Bad: 
+
+\paragraph{Graphical models}
+Another line of work has concentrated on the probabilistic interpretation of energy minimization which is maximum likelihood estimation. The labels $y$ are treated as unknown variables while the image features $x$ (e.g intensity, texture etc.) are treated as observables (more details in section ???). There are mainly two different approaches: The discriminative approach (conditional random fields \cite{Lafferty01_CRFSeq, KaeSohn13_CRF}) models $p(y|x)$ directly, where as the generative approach (Markov random fields) models $p(x|y)$ as a Gaussian distribution and uses pairwise potentials $p(y_i,y_j)$ for neighboring pixels and potentially priors on the label. CRF methods generally need more training data whereas MRF are fairly self-sufficient.
+
+These maximum likelihood problems are generally impossible to solve exactly since the graphical model is not a tree so that one has to use loopy belief propagation or variational inference methods (???). However for binary segmentation the GraphCut algorithm for example (???) is able to solve the problem precisely under the condition that the cost function is a submodular quadratic pseudo-boolean function of the form
+\beqs
+E(y) = a + \sum_i a_i y_i + \sum_{i,j}a_{ij}y_i y_j
+\eeqs
+where $y_i\in {0,1}$ for each $i$ and possibly depend on the observations $x$. 
+
+A common problem for these approaches is that they often find local structures but cannot incorporate global information. Several unsupervised and supervised extensions have thus been brought forth such as using Restricted Boltzmann machines \cite{KaeSohn13_CRF}, multiscale representations of the feature space \cite{He04_MultiScale} and shape priors \cite{Lempitsky_BranchMin}.
+
+
+\paragraph{Hybrid models and superpixels}
+There have already been attempts to combine the two frameworks \cite{Huang04_MRFDM, Chen12_MIGraphCut, Uzunbas13_MultiOrgan, Schlesinger13}. 
+However pixelwise MRF/CRF are computationally inefficient to solve for high resolution images as is the case in our segmentation task. In this case we exploit the work by Malik et al. \cite{Malik03_Superpixel} and pre-process the high-resolution images using their superpixel algorithm. This clusters regions according to their texture and brightness similarity as well as contour cues using trained data from natural images (???).
+%In order to find the organs automatically we need to have a reasonably high number of superpixels such that the real contour is actually in the set of possible edges given by the superpixel edges. It should also not be too high since edges tend to become very non-smooth. 
+
+The first attempts which were made to segment e.g. the gut used superpixels at different scales and applied a random forest algorithm on these superpixels. Similarly a CRF and Restricted Boltzmann machines were tested on the data. However, albeit being accurate for some of the images, it could not provide a very reliable segmentation result throughout the range of different embryos. 
+
+Since for each life stage of the embryo, it is known to have a structure similar to a given template, we want to incorporate this prior information into an superpixel based MRF approach.  
+The level set segmentation framework provides an easy way to incorporate such priors, where the probability distribution over the shapes is calculated using Gaussian kernel density estimation.
+
+\section{Model}
+
+In our novel model we use an MRF similar to the one in \cite{Huang04_MRFDM} on superpixels, however opposed to their model we do not use contours which carry the burden of parameterization but take advantage of the level set functions. 
+%Also later on we extend this framework to the super pixel level.
+
+%We first describe the model on a pixel level. 
+Let's denote $y$ as our hidden labels, $x$ as our observed superpixel features (e.g. intensities, texture, relative location etc.). We index pixels by $i$ and our signed distance function is $\phi$. Our model for the joint probability distribution corresponds to use an undirected graphical model as in figure \ref{MRF} with node set $\Nu$ and edge set $E$. 
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[scale = 0.3]{MRF.pdf}
+ \label{MRF}
+\caption{Markov random field model}
+  \end{figure}
+
+In general the graphical model in the figure can have maximal cliques of size bigger than two however, we only consider pairwise potentials as a specific case. This yields the following factorization
+%Our graphical model, depicted in ??? allows for the following factorization with pairwise potentials $\psi$ reads
+\begin{align}
+p(x,y,\phi) &=  \prod_{i\in \Nu} \psi(x_i,y_i)  \prod_{(i,j)\in E} \psi(y_i,y_j)\prod_{i\in \Nu} p(y_i|\phi)p(\phi) \label{total_joint}\\
+&=: \prod_{i\in \Nu} p(x_i|y_i)p(y_i,y_j)p(y_i|\phi)p(\phi|\tilde{\phi})\nonumber
+\end{align}
+where $\tilde{\phi}$ denote prior shapes.
+
+We model $p(x_i|y_i)$ as a multivariate Gaussians mixture with parameters $\mu_k$ and $\Sigma_k$ (in this paper $k=0,1$ for binary segmentation), i.e. 
+
+\beqs
+p(x_i|y_i = k) = \frac{1}{2\pi \sqrt{|\Sigma_k|}} \exp(-\frac{1}{2} (x- \mu_k)\Sigma_k^{-1}(x - \mu_k))
+\eeqs
+
+Our pairwise potentials read
+\beq
+\label{edgepot}
+p(y_i,y_j) \propto \theta_1 \Indi_{y_i\neq y_j} + \theta_2 \Indi_{y_i=y_j}
+\eeq
+%It turns out that the choice of $\theta_i$ is best made using the observed $x_i, x_j$. 
+
+For the consistency measure of the labels $y$ on $\phi$ we use the logistic function
+\beqs
+p(y_i|\phi) = \left(\frac{1}{1 + \E^{-\lambda \phi(i)}}\right)^{y_i} \left(\frac{1}{1 + \E^{\lambda \phi(i)}}\right)^{1-y_i}
+\eeqs
+where $\phi(i)$ is basically a signed distance function (possibly other distances) and $\lambda$ controls the sharpness of the slope. 
+%Note: Schlesinger uses $\psi(y|\phi) = \E^{\sum_i y_i \phi(i)}$.
+
+For the probability distribution on the level set function we use
+\begin{align*}
+p(\phi|\tilde{\phi}) &= E_{int}(\phi) + E_{prior}(\phi)\\
+&= \lambda_1 \int_{\Omega}\delta_\epsilon(\phi(x,y))\|\nabla \phi(x,y)\|\d x \d y + \lambda_2 \int_{\Omega}H_\epsilon(\phi(x,y))\d x \d y\\
+&- \log \sum_{i=1}^N \exp\left(-\frac{1}{2\sigma^2}d^2(H(\phi),H(\phi_i))\right)
+\end{align*}
+where $d$ is the smoothed symmetric distance between the level set functions defined as
+\beqs
+d^2(H_\epsilon(\phi_1),H_\epsilon(\phi_2)) = \int_{\Omega} (H_\epsilon(\phi_1) - H_\epsilon(\phi_2))^2 \d x\d y
+\eeqs
+Instead of using the non-smooth Heaviside function we apply a smoothed version, i.e. 
+\beqs
+H_\epsilon(z) = \frac{1}{2}(1+ \frac{2}{\pi}\arctan \left( \frac{z}{\epsilon} \right))
+\eeqs
+as in \cite{ChanVese01} with derivative $\delta_\epsilon(z) = \frac{\epsilon}{z^2 + \epsilon^2}$. The $\epsilon$ is dropped in the following for simpler notation.
+
+\subsection{Structured Variational inference}
+The inference task is to maximize $p(y,\phi|x) \propto p(x,y,\phi)$. However finding the maximum of \eqref{total_joint} exactly is computationally intractable. Therefore we use structural variational inference \cite{Jordan99_Variational, Wainwright_Variational} to approximate the problem, in which we look for a distribution $Q(y,\phi|x,a,b)$ which has a structure parameterized by $a,b$ that simplifies maximum likelihood computation. The ``best-matching'' $Q$ is found by minimizing the Kullback Leibler divergence $KL(Q||P) = \sum_\phi \sum_y Q(y,\phi|x,a,b) \log \frac{Q(y,\phi|x,a,b)}{p(y,\phi|x)}$. 
+
+Our ansatz for the structure of $Q$ is the following factorization.
+\beqs
+Q(y,\phi|x,a,b) = Q_M(y|x,a)Q_D(\phi|b) 
+\eeqs
+with $Q_M(y|x,a) = \prod_{i,j} \psi(y_i,y_j) \prod_i  \xi(x_i,y_i) p(y_i|a_i)$ and $Q_D(\phi|b) \propto \prod_i p(b_i|\phi) p(\phi)$ so that we have factorized the distribution with respect to the two unknown vectors $y, \phi$. We are hence assuming independence of the two, given $a,b$ respectively.
+
+We now need to minimize the KL divergence for which we follow the easy derivation in Blei:
+Using the independence we can write out the KL 
+\begin{align*}
+&\EE \log Q_M(y|x,a) + \EE \log Q_D(\phi|b) - \EE \log p(y,\phi|x)\\
+ = &\EE \left[\log Q_M(y|x,a)|\phi \right] + \EE \left[ \log Q_D(\phi|b) |y\right] - \EE \left[\EE \log p(y|\phi) |\phi \right]- \EE \log p(\phi)\\
+= &\EE_{Q_M} (\log Q_M(y|x,a) - \EE_{Q_D} \log p(y|\phi)) + \EE_{Q_D} (\log Q_D(\phi|b) - \log p(\phi))\\
+= &\EE_{Q_M} (\log Q_M(y|x,a) - \EE_{Q_D} \log p(y|\phi)) + \EE_{Q_D} (\log p(b|\phi) + c)
+\end{align*}
+where the first equality follows from the conditional independence of $y,\phi$ given $a,b$ and the second uses $Q_D(\phi) = p(\phi)$.
+
+By Lagrange equations of first kind to incorporate the constraint of $\EE Q_D(\phi|b) |b = 1$ and $\EE Q_M(y|x,a) |x,a = 1$  we obtain that the Lagrange multiplier $\lambda = 1$ and the following mu
+st hold for optimal $a,b$:
+\begin{align*}
+& -\EE_{Q_D} \log p(y|\phi) + \log Q_M(y|x,a) = 0\\
+\implies  &\sum_i (\EE_{Q_D}\log p(y_i|\phi) - \log p(y_i|a_i)) = \sum_{j\in N(i)} \log p(y_i,y_j) - \EE_{Q_D} \log(p(y_i,y_j)) \\
+\implies &\log p(y_i|a_i) = \EE_{Q_D} \log p(y_i|\phi) 
+\end{align*}
+and similarly
+\begin{align*}
+&- \EE_{Q_M} \log p(y|\phi) + \log p(b|\phi) = 0\\
+\implies &\log p(b_i|\phi) = \EE_{Q^i_M} \log p(y_i|\phi)  
+\end{align*}
+where $Q_M^i = Q_M(y_i|x,a)$.
+
+These are the fixed point equations and we will aim at solving them iteratively using alternating minimization. 
+
+\subsection{Algorithm}
+
+We now turn to the algorithm pipeline
+\begin{itemize}
+\item Initialize $p(y_i|a_i)$ by a uniform distribution.
+\item Step $k$.
+\begin{enumerate}
+\item In order to calculate $Q_M(y_i|x_i,a)$ estimate the parameters of $p(x_i|y_i)$ (which are $\mu_k,\Sigma_k$) using the EM algorithm %latent variable $y_i$ and the EM algorithm
+\item Given approximate $Q_M(y_i|x_i,a)$ using loopy belief propagation/mean field inference to obtain $Q_M(y_i|x,a)$.
+\item Calculate $\log p(b_i|\phi) = \EE_{Q_M^i} \log p(y_i|\phi)$.
+\item Calculate $\phi^* = \argmax_{\phi} Q_D(\phi|b)$ using \eqref{combined_update}
+\item Approximate $p(y_i|a_i) = \exp(\EE_{Q'_D} \log p(y_i|a_i))= p(y_i|\phi^*)$.
+\end{enumerate} 
+\item Upon termination: $y_i = \max_k Q_M(y_i = k|x,a)$. 
+\end{itemize}
+
+\subsection{Step 1 and 2 - EM algorithm using loopy belief propagation}
+The aim is to calculate the marginal $Q_M(y_i|x,a)$ for the fixed point equation. Since $Q_M(y_i|x_i,a)$ is given, if we know the parameters for $p(x_i|y_i)$ this is a marginalization problem. In order to find $p(x_i|y_i)$ for the node potentials $Q_M(y_i|x_i,a)$ we thus need to estimate the parameters by solving the maximization
+\beqs
+\max_{\theta} \log p(x|\theta,a) = \log \sum_y p(x,y|\theta) = \log \sum_y p(x|y,\theta)p(y|a)
+\eeqs
+
+However since we have sum ...
+
+For the EM algorithm we have the E Step
+\begin{align*}
+\L(q^{(t+1)},\theta) &= \sum_y p(y|x,\theta^{(t)}) (\log p(x|y,\theta) + \log p(y|a)) \\
+&= \sum_i \sum_{y_i} \log p(x_i|y_i,\theta) \sum_{y_j:j\neq i} p(y|x,\theta^{(t)},a) + c(\theta)\\
+%&= \sum_i \sum_{y_i} p(y_i|x, \theta^{(t)},a) \log p(x_i|y_i,\theta) + c(\theta)\\
+&= \sum_i \sum_{y_i} p(y_i|x, \theta^{(t)},a) \Indi_{y_i=l} (-\log \sigma_l - \frac{(x_i -\mu_l)^2}{2\sigma_l^2}) + c(\theta)\\
+&= \sum_i \sum_l p(y_i = l|x,\theta^{(t)},a) (-\log \sigma_l -  \frac{(x_i -\mu_l)^2}{2\sigma_l^2}) + c(\theta)
+\end{align*}
+
+For the maximization step we maximize $\L(q^{(t+1)},\theta)$ over $\theta$ so that we have
+\begin{align*}
+\mu_l^{(t+1)} &= \frac{\sum_i p(y_i=l|x,\theta^{(t)},a) x_i}{\sum_i p(y_i=l|x,\theta^{(t)})}\\
+\sigma_l^{2(t+1)} &= \frac{\sum_i p(y_i =l | x,\theta^{(t)},a)(x_i-\mu_l)^2}{\sum_i p(y_i = l|x,\theta^{(t)},a)}
+\end{align*}
+which intuitively just computes the average intensity/variance within one label.
+
+After the EM algorithm has estimated the parameters we finally need to compute the marginal likelihood 
+\beqs
+p(y_i|x,\theta^{(t)},a) \propto \sum_{y_j:j\neq i} \prod_i p(x_i|y_i) \prod_{i,j} p(y_i,y_j) \prod_i p(y_i|a_i)
+\eeqs
+This can be readily computed using a loopy belief propagation algorithm/junction tree algorithm (slow?).
+%% We write down the complete likelihood
+%% \beqs
+%% p(x_i|\theta_i) = p(y_i=1|a_i)p(x_i|y_i=1,\theta_1) + p(y_i=0|a_i)p(x_i|y_i=0,\theta_0)
+%% \eeqs
+%% We need to maximize this likelihood. 
+
+
+\subsection{Step 2- Finding the level set function}
+\label{levelset}
+\subsubsection{Level Set Segmentation with prior}
+The term $p(\phi)$ enables us to incorporate priors and regularizations. In our model we use length and area as in \cite{Cremers06_KernelDensity, ChanVese01, MumfordShah89}. Note that instead of $p(x|\phi)$ in level set formulations we now have $p(x|y)$ and $p(y|\phi)$.
+\begin{align*}
+-\log p(\phi|\tilde{\phi}) &= E_{int}(\phi) + E_{prior}(\phi)\\
+&= \lambda_1 \int_{\Omega}\delta_\epsilon(\phi(x,y))\|\nabla \phi(x,y)\|\d x \d y + \lambda_2 \int_{\Omega}H_\epsilon(\phi(x,y))\d x \d y\\
+&- \log \sum_{i=1}^N \exp\left(-\frac{1}{2\sigma^2}d^2(H(\phi),H(\phi_i))\right)
+\end{align*}
+where $H$ is the Heaviside function and $\sigma^2$ is the width of the Gaussian kernel. $E_{int}$ denotes the regularization on length and area of the region (boundary), $E_{prior}$ is the energy given by the shape prior which is measured as a distance $d^2(H(\phi),H(\phi_i)) = \int_{\Omega}(H(\phi)-H(\phi_i))^2\d x$ is basically doing a nonparametric kernel density estimation for the shape distribution using given samples $\phi_i$. We choose for the kernel width $\sigma^2=\frac{1}{N}\sum_{i=1}^N \min_{j\neq i}d^2(H(\phi_i),H(\phi_j))$.
+
+
+The task is now to maximize $\log Q_D(\phi|b) \propto \log p(b_i|\phi)p(\phi)$ which is equivalent to minimizing the energies $E_{int}, E_{prior}$. By the multivariate Euler Lagrange equations (cite L.C. Evans) we know that $F(x) = \int \L(x,\phi(x),\nabla \phi(x))\d x$ is minimized if 
+% for which Euler-Lagrange equation for multivariates $x$ yields the following fixed point equation for the optimal $\phi^*$:
+\beqs
+\frac{\partial}{\partial \phi} \L(x,\phi(x),\nabla \phi(x))  + \divop \frac{\partial}{\partial \nabla \phi} \L(x,\phi(x),\nabla \phi(x))=0
+\eeqs 
+
+We now add time for the evolution of the function and minimize the energy with respect to $\phi$ using the update equation
+\begin{align}
+\frac{\partial \phi}{\partial t} &= -\frac{\partial E_{int}(\phi)}{\partial \phi} - \frac{\partial E_{prior}(\phi)}{\partial \phi}  \label{labelset_update}\\
+&=  \delta_{\epsilon}(\phi) (\lambda_1 \left[\divop(\frac{\nabla \phi}{\|\nabla \phi\|})\right] +\lambda_2) - \frac{\sum_i \alpha_i \frac{\partial}{\partial \phi} d^2(H(\phi),H(\phi_i))}{2\sigma^2 \sum_i \alpha_i}\nonumber
+\end{align}
+with $\alpha_i = \exp(-\frac{d^2(H\phi,H\phi_i)}{2\sigma^2})$.
+This is basically doing a gradient descent. For the second term since $E_{prior}$ is a direct function of $\phi$, we can readily take the partial derivative with respect to $\phi$. $\frac{\partial}{\partial \phi} d^2(H(\phi),H(\phi_i))}
+$ is a Gateaux derivative and yields
+\beqs
+\frac{\partial}{\partial \phi} d^2(H(\phi),H(\phi_i)) = \delta_{\epsilon}(\phi)(H(\phi)-H(\phi_i))
+\eeqs
+
+The question is how we can discretize the continuous first term in \eqref{labelset_update}. If we expand it we obtain
+\beqs
+\divop \frac{\nabla \phi}{\|\nabla \phi\|} = \frac{ \frac{\partial^2 \phi}{\partial x^2} (\frac{\partial \phi}{\partial y})^2 - 2 \frac{\partial^2 \phi}{\partial x \partial y} \frac{\partial \phi}{\partial x}\frac{\partial \phi}{\partial y} +  \frac{\partial^2 \phi}{\partial y^2} (\frac{\partial \phi}{\partial x})^2}{(\frac{\partial \phi}{\partial x}^2  + \frac{\partial \phi}{\partial y}^2)^{\frac{3}{2}}}
+\eeqs
+In our implementation we simply approximate the continuous derivatives by finite differences (this is exactly the formula they use in the Chan Vese Matlab package).
+
+The overall formula for the update thus reads
+\begin{align*}
+\frac{\partial \phi}{\partial t} &= \delta_{\epsilon}(\phi)(\lambda_1  \frac{ \frac{\partial^2 \phi}{\partial x^2} (\frac{\partial \phi}{\partial y})^2 - 2 \frac{\partial^2 \phi}{\partial x \partial y} \frac{\partial \phi}{\partial x}\frac{\partial \phi}{\partial y} +  \frac{\partial^2 \phi}{\partial y^2} (\frac{\partial \phi}{\partial x})^2}{(\frac{\partial \phi}{\partial x}^2  + \frac{\partial \
+phi}{\partial y}^2)^{\frac{3}{2}}} + \lambda_2) \\
+&- \frac{\sum_i \alpha_i  \delta_{\epsilon}(\phi)(H(\phi)-H(\phi_i))}{2\sigma^2 \sum_i \alpha_i}\nonumber
+\end{align*}
+
+
+\subsubsection{Combining MRF with Level Set}
+The coupling of the two frameworks happens in the step when we calculate the minimum of
+\beqs
+-\log Q_D(\phi|b) = -\log p(b|\phi) - \log p(\phi) = - \log p(\phi) - \EE_{Q_M^i}\log p(y_i|\phi)
+\eeqs
+We can use our results derived in section \ref{levelset} and arrive at the update step
+\begin{align*}
+\frac{\partial \phi}{\partial t} &= \frac{\partial}{\partial \phi} \log p(\phi) +\EE_{Q_M^i} \frac{\partial}{\partial \phi} \log p(y_i|\phi)\\
+&= \delta_{\epsilon}(\phi)(\lambda_1  \frac{ \frac{\partial^2 \phi}{\partial x^2} (\frac{\partial \phi}{\partial y})^2 - 2 \frac{\partial^2 \phi}{\partial x \partial y} \frac{\partial \phi}{\partial x}\frac{\partial \phi}{\partial y} +  \frac{\partial^2 \phi}{\partial y^2} (\frac{\partial \phi}{\partial x})^2}{(\frac{\partial \phi}{\partial x}^2  + \frac{\partial \phi}{\partial y}^2)^{\frac{3}{2}}} + \lambda_2) \\
+&- \frac{\sum_i \alpha_i  \delta_{\epsilon}(\phi)(H(\phi)-H(\phi_i)}{2\sigma^2 \sum_i \alpha_i} + \EE_{Q_M^i} \lambda(\frac{y_i}{1 +\E^{\lambda \phi}} - \frac{1-y_i}{1 + \E^{-\lambda \phi}})
+\nonumber
+\end{align*}
+
+
+\subsection{On a superpixel level}
+In the case of superpixels we use the same MRF as above, however we do not have a perfect lattice structure anymore which had directly corresponded to the pairwise potentials. Nevertheless we stick to the same probability distribution model as in - which could be more correctly modeled by a factor graph. ... ???
+
+Instead of pixel intensities we use the mean and standard deviation of the intensities within the superpixels and model 
+\beqs
+p(\bx_i|y_i = k) = \frac{1}{2\pi \sqrt{|\Sigma_k|}} \exp(-\frac{1}{2} (\bx- \mathbf{\mu}_k)\Sigma_k^{-1}(\bx - \mathbf{\mu}_k))
+\eeqs
+
+
+
+\section{Implementation and Results on a toy example}
+
+\subsection{Toy Example Setting}
+For a much simpler example than organ segmentation to test our algorithmic framework, we have chosen the following problem: The task is to find the exact boundary of touching embryos in an image where albeit having a centered embryo, parts of other embryos are sticking in and might actually share boundaries with the embryo of interest. The aim is to automatically find the boundary with only little training data.
+
+In the results shown, a total of 3 training images (from touching and non-touching embryos) was used for the shape priors, where each prior was shifted and resized to obtain 9 versions of each, leading to a pool of 27 priors in total.
+
+\subsection{Implementation details}
+$\epsilon$ in the Heaviside function was chosen to be $10$ and $\lambda_2 =0$ for simplicity.
+. Also prone to constant choices of e.g. $\lambda$ in $p(y_i|\phi)$. For all studied cases $\lambda = 5$ yielded a good result.  In order to overcome numerical issues (since the exponential rendered all values even of $d^2/\sigma^2 \sim 100$ to zero) the kernel width $\sigma$ also had to be chosen as $\sigma^2 = max_i d^2(H_\epsilon(\phi),H_\epsilon(\phi_i)$. The level set segmentation part of the algorithm was iterated for a fixed number of 100.
+
+We set the number of desired superpixels to 50. For building the edge structure after running the superpixel algorithm, we add an edge between two superpixels if their common boundary is above a certain length. We also merge very small superpixels which have under a threshold number of pixels. 
+
+As features of the superpixels we choose the intensity mean and standard deviation. For the edge potential we use information about the probability boundary (which is also computed as a side product in the superpixel algorithm) in the following way in \eqref{edgepot}
+\beqs
+\theta_1 = \theta_2 = 1 - \tilde{e}(i,j)+ \epsilon
+\eeqs
+where $\tilde{e}(i,j)$ is the normalized average probability along the boundary between superpixel $i$ and $j$.
+
+
+In order to speed up computation we run superpixel algorithm on a rescaled image (by $30%$) and the run the level set segmentation with shape prior on an even smaller scale (in this example case $7%$). In this way we can make use of the sophisticated superpixel algorithm to encode high resolution information in the feature representation of the superpixels and run both MRF and level set segmentation efficiently on a much smaller level.
+
+\subsection{Results}
+The original picture shows two embryos with a fairly long common boundary. 
+
+The superpixel algorithm gives the following pre-segmentation and edge structure.
+
+ \begin{figure}[htbp]
+  \centering
+  \subfigure[]{
+  \includegraphics[scale=0.3]{touching2.pdf}
+  }
+  \subfigure[]{
+  \includegraphics[scale=0.25]{fruitflyEmbSuperPixelEg.pdf}
+ }  
+\caption{(a) Original picture. (b) Superpixel segmentation with edge structure for MRF (on a resized image)}
+\label{Superpixels}
+ \end{figure}
+
+We now show some results of the proposed algorithm. We first compare the algorithm on a test set with the individual approaches in figure \eqref{Individualresults}. The MRF approach directly applied on the superpixel level detects both embryos which are distinct from the homogeneous background as the object of interest. The level set segmentation alone concentrates around areas with dark intensity but misses the global structure. Adding the prior term as in \cite{Cremers06_KernelDensity} adds global structure but cannot find the exact edges (see also figure \ref{MRFvsCV}). As can be observed our algorithm combines the information in (a) and (b) to find the perfect edges. The pixelation of the contour is due to the image resizing for computational efficiency.
+
+ \begin{figure}[htbp]
+  \centering
+  \subfigure[]{
+  \includegraphics[scale=0.25]{MRFtouching2.pdf}
+  }
+  \subfigure[]{
+  \includegraphics[scale=0.25]{CVtouching2.pdf}
+ }  
+\subfigure[]{
+  \includegraphics[scale=0.3]{MRFCVtouching2.pdf}
+ }  
+  \subfigure[]{
+    \includegraphics[scale=0.25]{hybridPriorTouching2.pdf}
+  }
+\caption{(a)  MRF on superpixels. (b) Level set segmentation. (c) Level set segmentation and prior.  (d) MRF with level set segmentation}
+\label{Individualresults}
+ \end{figure}
+
+
+In figure \ref{ResultsTraining} and \ref{ResultsTest} we show results of our algorithm on our test and training images. In most of the cases, the edges can be found very precisely. In practice it turned out that the choice of the constants $\lambda$ needs to be fine tuned, as it determines the influence of the MRF on the level set segmentation which should neither be too strong such that the shape prior distribution can ``drive'' the contour to the center, nor too small such that the level set algorithm does not get stuck on the ``mean'' prior. 
+
+\begin{figure}[htbp]
+\centering
+\subfigure{
+\includegraphics[scale=0.25]{hybridPriorTouching1.pdf}
+}
+\subfigure[]{
+\includegraphics[scale=0.2]{hybridPriorTouching2.pdf}
+}
+\subfigure[]{
+  \includegraphics[scale=0.25]{hybridPriorTouching3.pdf}
+}
+\caption{Segmentation results on the three training images used for the set of priors}
+\label{ResultsTraining}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+
+\subfigure{
+  \includegraphics[scale=0.25]{hybridPriorTouching4.pdf}
+}
+\subfigure{
+  \includegraphics[scale=0.25]{hybridPriorTouching6.pdf}
+}
+\subfigure{
+  \includegraphics[scale=0.25]{hybridPriorTouching7.pdf}
+}
+\subfigure{
+  \includegraphics[scale=0.25]{hybridPriorTouching8.pdf}
+}
+\subfigure{
+  \includegraphics[scale=0.25]{hybridPriorTouching9.pdf}
+}
+\subfigure{
+  \includegraphics[scale=0.25]{hybridPriorTouching11.pdf}
+}
+\caption{Segmentation results on 6 different test embryos}
+\label{ResultsTest}
+\end{figure}
+
+All of the above pictures use the maximum likelihood result given by the Markov random field. An interesting observation is that the level set segmentation does not always find the boundary entirely correctly, i.e. the set $\{i\in \Nu: \phi(i) >=0\}$  does not entirely match with the set $\{i\in \Nu: y_i =1\}$ found by the MRF maximum likelihood. 
+\begin{figure}[htbp]
+\centering
+\subfigure[]{
+\includegraphics[scale=0.25]{hybridPriorTouching9.pdf}
+}
+\subfigure[]{
+\includegraphics[scale=0.25]{hybridPriorTouching9_CV.pdf}
+}
+\caption{(a) shows the final result found by the MRF, (b) depicts the zero level set found by the level set segmentation algorithm}
+\label{MRFvsCV}
+\end{figure}
+
+Figure \ref{Iterations} shows in detail how the algorithm evolves over the iteration steps. In the first iteration the MRF selects parts of the picture with relatively darker intensity and relatively high standard deviation. This particularly includes the half-embryo which sticks in from the right. After one iteration of the level set segmentation with prior we see that it focuses the attention to the center and away from the very strong intensity cue on the right. The MRF then incorporates this new information while the level set algorithm pushes the contour to the boundary of the embryo using prior information until it converges.
+
+\begin{figure}[htbp]
+\centering
+\subfigure[]{
+\includegraphics[scale=0.3]{hPT6_MRF1.pdf}
+}
+\subfigure[]{
+\includegraphics[scale=0.3]{hPT6_CV1.pdf}
+}
+\subfigure[]{
+\includegraphics[scale=0.3]{hPT6_MRF2.pdf}
+}
+\subfigure[]{
+\includegraphics[scale=0.3]{hPT6_CV2.pdf}
+}
+\subfigure[]{
+\includegraphics[scale=0.3]{hPT6_MRF3.pdf}
+}
+\subfigure[]{
+\includegraphics[scale=0.3]{hPT6_CV3.pdf}
+}
+\subfigure[]{
+\includegraphics[scale=0.3]{hPT6_MRF4.pdf}
+}
+\subfigure[]{
+\includegraphics[scale=0.3]{hPT6_CV4.pdf}
+}
+\caption{This series of pictures depicts the algorithm at different iteration steps for one image. Each row corresponds to one iteration where the left column depicts the MRF result and the right column depicts the level set segmentation result}
+\label{Iterations}
+\end{figure}
+
+For most of the 10 test pictures, the algorithm is found to converge after less than 4 iterations. For each picture that amounts to at most 60 seconds on a ThinkPad, including running the super pixel algorithm, which is the computationally most expensive and takes 35 seconds on its own.
+
+
+\section{Summary and Outlook}
+If we have a big enough training data set for the shape priors, in general the parameters $\mu, \sigma, \theta$ can be trained beforehand.
+
+The next step would be to test it on the actual data set for the segmentation of the gut. 
+
+Multilabel extension
+
+\section{Acknowledgements}
+I want to particularly thank Siqi Wu for his support and help in introducing me to the problem and helping out on some of the implementation work. Also I want to thank Antony Joseph, Zac Zhang and Erwin Frise for giving valuable insights on various results and problems which occurred using previous segmentation algorithms on this data set.
+
+\FloatBarrier
+\vskip 0.2in
+\nocite{*}
+\bibliographystyle{plain}
+\bibliography{lit}
+
+\begin{appendices}
+
+\end{appendices}
+\end{document}

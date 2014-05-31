@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="612px" height="792px" viewBox="0 0 612 792" enable-background="new 0 0 612 792" xml:space="preserve">
+<g id="imgOutline_2_">
+	<rect x="-294" y="-54" fill="none" stroke="#000000" stroke-miterlimit="10" width="1200" height="900"/>
+</g>
+<g id="embryo_2_">
+	<g id="embOutline_2_">
+		<polygon fill="none" stroke="#000000" stroke-miterlimit="10" points="-183.908,428.524 -169.047,355.376 -85.428,289.708 
+			60.062,234.567 208.035,231.446 332,218.555 530,228.089 682.917,274 758.135,357.297 780.309,432.857 767.491,487.172 
+			697.716,554.093 559.816,613.399 343.772,628.421 94.331,601.289 -50.634,537.723 -128.083,485.105 		"/>
+	</g>
+	<g id="epi_2_">
+		<polygon fill="none" stroke="#000000" stroke-miterlimit="10" points="369.779,280.083 482.932,271.803 670.37,311.763 
+			723.344,394.713 720.977,466.385 674.152,531.505 568.437,580.426 386.747,593.333 184.786,580.618 55.341,548.726 
+			-124.587,447.734 -149.896,409.446 -135.212,358.449 -36.837,291.312 125.806,245.251 		"/>
+	</g>
+	<g id="nerveMeso_2_">
+		<polyline fill="none" stroke="#000000" stroke-miterlimit="10" points="295.899,316.646 476.708,287.47 640.872,322.872 
+			682.917,408.935 677.336,429.602 654,482 566.061,542.735 457.674,561.311 306,561.311 99.273,520.163 		"/>
+	</g>
+	<g id="gut_2_">
+		<polygon fill="none" stroke="#000000" stroke-miterlimit="10" points="154.171,228.089 155.266,331.918 189.802,444.649 
+			225.391,469.301 281.557,500.709 372.229,475.896 439.352,456.839 480.858,348.65 442.494,303.312 286.724,348 277.629,235.783 		
+			"/>
+	</g>
+	<g id="gutSplit_2_">
+		<polyline fill="none" stroke="#000000" stroke-miterlimit="10" points="194.944,251.904 186.683,364.188 236,384 298.2,395.986 
+			333.544,396 382,395.986 		"/>
+	</g>
+	<g id="germCell_2_">
+		<polygon fill="none" stroke="#000000" stroke-miterlimit="10" points="317.515,354 396.776,325.751 418,423.488 340,412.915 		"/>
+	</g>
+	<g id="mouth_2_">
+		<polygon fill="none" stroke="#000000" stroke-miterlimit="10" points="-75.881,514.377 -183.908,428.524 -61.925,400.08 
+			22,407.772 74.355,592.53 		"/>
+	</g>
+	<g id="furrow_2_">
+		<polyline fill="none" stroke="#000000" stroke-miterlimit="10" points="157.032,252.8 99.273,410.522 22,538.36 		"/>
+	</g>
+</g>
+</svg>

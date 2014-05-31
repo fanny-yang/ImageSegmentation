@@ -1,0 +1,123 @@
+\begin{thebibliography}{10}
+
+\bibitem{Chan05_LevelShape}
+Tony Chan and Wei Zhu.
+\newblock Level set based shape prior segmentation.
+\newblock In {\em Computer Vision and Pattern Recognition, 2005. CVPR 2005.
+  IEEE Computer Society Conference on}, volume~2, pages 1164--1170. IEEE, 2005.
+
+\bibitem{ChanVese01}
+Tony~F Chan and Luminita~A Vese.
+\newblock Active contours without edges.
+\newblock {\em Image processing, IEEE transactions on}, 10(2):266--277, 2001.
+
+\bibitem{Chen09_LevelShapeIntensity}
+Siqi Chen and Richard~J Radke.
+\newblock Level set segmentation with both shape and intensity priors.
+\newblock In {\em Computer Vision, 2009 IEEE 12th International Conference on},
+  pages 763--770. IEEE, 2009.
+
+\bibitem{Cootes01_ActiveApp}
+Timothy~F Cootes, Gareth~J Edwards, Christopher~J Taylor, et~al.
+\newblock Active appearance models.
+\newblock {\em IEEE Transactions on pattern analysis and machine intelligence},
+  23(6):681--685, 2001.
+
+\bibitem{Cootes92_ActiveShape}
+Timothy~F Cootes and Christopher~J Taylor.
+\newblock Active shape models—‘smart snakes’.
+\newblock In {\em BMVC92}, pages 266--275. Springer, 1992.
+
+\bibitem{Cootes92_TrainingShape}
+Timothy~F Cootes, Christopher~J Taylor, David~H Cooper, and Jim Graham.
+\newblock Training models of shape from sets of examples.
+\newblock In {\em BMVC92}, pages 9--18. Springer, 1992.
+
+\bibitem{Cremers06_KernelDensity}
+Daniel Cremers, Stanley~J Osher, and Stefano Soatto.
+\newblock Kernel density estimation and intrinsic alignment for shape priors in
+  level set segmentation.
+\newblock {\em International Journal of Computer Vision}, 69(3):335--351, 2006.
+
+\bibitem{Evans_PDE}
+L.C. Evans.
+\newblock {\em Partial Differential Equations}.
+\newblock American Mathematical Society, 1998.
+
+\bibitem{He04_MultiScale}
+Xuming He, Richard~S Zemel, and MA~Carreira-Perpindn.
+\newblock Multiscale conditional random fields for image labeling.
+\newblock In {\em Computer vision and pattern recognition, 2004. CVPR 2004.
+  Proceedings of the 2004 IEEE computer society conference on}, volume~2, pages
+  II--695. IEEE, 2004.
+
+\bibitem{Huang04_MRFDM}
+Rui Huang, Vladimir Pavlovic, and Dimitris~N Metaxas.
+\newblock A graphical model framework for coupling mrfs and deformable models.
+\newblock In {\em Computer Vision and Pattern Recognition, 2004. CVPR 2004.
+  Proceedings of the 2004 IEEE Computer Society Conference on}, volume~2, pages
+  II--739. IEEE, 2004.
+
+\bibitem{Jordan99_Variational}
+Michael~I Jordan, Zoubin Ghahramani, Tommi~S Jaakkola, and Lawrence~K Saul.
+\newblock An introduction to variational methods for graphical models.
+\newblock {\em Machine learning}, 37(2):183--233, 1999.
+
+\bibitem{KaeSohn13_CRF}
+Andrew Kae, Kihyuk Sohn, Honglak Lee, and Erik Learned-Miller.
+\newblock Augmenting crfs with boltzmann machine shape priors for image
+  labeling.
+\newblock In {\em Computer Vision and Pattern Recognition (CVPR), 2013 IEEE
+  Conference on}, pages 2019--2026. IEEE, 2013.
+
+\bibitem{Kass88_Snakes}
+Michael Kass, Andrew Witkin, and Demetri Terzopoulos.
+\newblock Snakes: Active contour models.
+\newblock {\em International journal of computer vision}, 1(4):321--331, 1988.
+
+\bibitem{Lafferty01_CRFSeq}
+John Lafferty, Andrew McCallum, and Fernando~CN Pereira.
+\newblock Conditional random fields: Probabilistic models for segmenting and
+  labeling sequence data.
+\newblock In {\em Proceedings of the Eighteenth International Conference on
+  Machine Learning, p.282-289, June 28-July 01, 2001}, 2001.
+
+\bibitem{Lempitsky_BranchMin}
+Victor Lempitsky, Andrew Blake, and Carsten Rother.
+\newblock Branch-and-mincut: global optimization for image segmentation with
+  high-level priors.
+\newblock {\em Journal of Mathematical Imaging and Vision}, 44(3):315--329,
+  2012.
+
+\bibitem{Leventon00_ShapeGeodesic}
+Michael~E Leventon, W~Eric~L Grimson, and Olivier Faugeras.
+\newblock Statistical shape influence in geodesic active contours.
+\newblock In {\em Computer Vision and Pattern Recognition, 2000. Proceedings.
+  IEEE Conference on}, volume~1, pages 316--323. IEEE, 2000.
+
+\bibitem{MumfordShah89}
+David Mumford and Jayant Shah.
+\newblock Optimal approximations by piecewise smooth functions and associated
+  variational problems.
+\newblock {\em Communications on pure and applied mathematics}, 42(5):577--685,
+  1989.
+
+\bibitem{Malik03_Superpixel}
+Xiaofeng Ren and Jitendra Malik.
+\newblock Learning a classification model for segmentation.
+\newblock In {\em Computer Vision, 2003. Proceedings. Ninth IEEE International
+  Conference on}, pages 10--17. IEEE, 2003.
+
+\bibitem{Schlesinger13}
+Dmitrij Schlesinger.
+\newblock A continuous shape prior for mrf-based segmentation.
+\newblock In {\em Energy Minimization Methods in Computer Vision and Pattern
+  Recognition}, pages 350--361. Springer, 2013.
+
+\bibitem{Wainwright_Variational}
+Martin~J Wainwright and Michael~I Jordan.
+\newblock Graphical models, exponential families, and variational inference.
+\newblock {\em Foundations and Trends{\textregistered} in Machine Learning},
+  1(1-2):1--305, 2008.
+
+\end{thebibliography}

@@ -1,0 +1,171 @@
+\begin{thebibliography}{10}
+
+\bibitem{Andres11_Probabilistic}
+Bjoern Andres, J{\"o}rg~H Kappes, Thorsten Beier, Ullrich Kothe, and Fred~A
+  Hamprecht.
+\newblock Probabilistic image segmentation with closedness constraints.
+\newblock In {\em Computer Vision (ICCV), 2011 IEEE International Conference
+  on}, pages 2611--2618. IEEE, 2011.
+
+\bibitem{Baswaraj12_ACReview}
+Dr~A~Govardhan Baswaraj and D~P~Premchand.
+\newblock Active contours and image segmentation: The current state of the art.
+\newblock {\em Global Journal of Computer Science and Technology}, 12(11-F),
+  2012.
+
+\bibitem{Chan05_LevelShape}
+Tony Chan and Wei Zhu.
+\newblock Level set based shape prior segmentation.
+\newblock In {\em Computer Vision and Pattern Recognition, 2005. CVPR 2005.
+  IEEE Computer Society Conference on}, volume~2, pages 1164--1170. IEEE, 2005.
+
+\bibitem{ChanVese01}
+Tony~F Chan and Luminita~A Vese.
+\newblock Active contours without edges.
+\newblock {\em Image processing, IEEE transactions on}, 10(2):266--277, 2001.
+
+\bibitem{Chen09_LevelShapeIntensity}
+Siqi Chen and Richard~J Radke.
+\newblock Level set segmentation with both shape and intensity priors.
+\newblock In {\em Computer Vision, 2009 IEEE 12th International Conference on},
+  pages 763--770. IEEE, 2009.
+
+\bibitem{Chen12_MIGraphCut}
+Xinjian Chen, Jayaram~K Udupa, Ulas Bagci, Ying Zhuge, and Jianhua Yao.
+\newblock Medical image segmentation by combining graph cuts and oriented
+  active appearance models.
+\newblock {\em Image Processing, IEEE Transactions on}, 21(4):2035--2046, 2012.
+
+\bibitem{Cootes01_ActiveApp}
+Timothy~F Cootes, Gareth~J Edwards, Christopher~J Taylor, et~al.
+\newblock Active appearance models.
+\newblock {\em IEEE Transactions on pattern analysis and machine intelligence},
+  23(6):681--685, 2001.
+
+\bibitem{Cootes92_ActiveShape}
+Timothy~F Cootes and Christopher~J Taylor.
+\newblock Active shape models—‘smart snakes’.
+\newblock In {\em BMVC92}, pages 266--275. Springer, 1992.
+
+\bibitem{Cootes92_TrainingShape}
+Timothy~F Cootes, Christopher~J Taylor, David~H Cooper, and Jim Graham.
+\newblock Training models of shape from sets of examples.
+\newblock In {\em BMVC92}, pages 9--18. Springer, 1992.
+
+\bibitem{Cremers06_KernelDensity}
+Daniel Cremers, Stanley~J Osher, and Stefano Soatto.
+\newblock Kernel density estimation and intrinsic alignment for shape priors in
+  level set segmentation.
+\newblock {\em International Journal of Computer Vision}, 69(3):335--351, 2006.
+
+\bibitem{Cremers07_Levelreview}
+Daniel Cremers, Mikael Rousson, and Rachid Deriche.
+\newblock A review of statistical approaches to level set segmentation:
+  integrating color, texture, motion and shape.
+\newblock {\em International journal of computer vision}, 72(2):195--215, 2007.
+
+\bibitem{ElBaz09_ShapeApp}
+Ayman El-Baz and Georgy Gimel’farb.
+\newblock Robust medical images segmentation using learned shape and appearance
+  models.
+\newblock In {\em Medical Image Computing and Computer-Assisted
+  Intervention--MICCAI 2009}, pages 281--288. Springer, 2009.
+
+\bibitem{He04_MultiScale}
+Xuming He, Richard~S Zemel, and MA~Carreira-Perpindn.
+\newblock Multiscale conditional random fields for image labeling.
+\newblock In {\em Computer vision and pattern recognition, 2004. CVPR 2004.
+  Proceedings of the 2004 IEEE computer society conference on}, volume~2, pages
+  II--695. IEEE, 2004.
+
+\bibitem{Huang04_MRFDM}
+Rui Huang, Vladimir Pavlovic, and Dimitris~N Metaxas.
+\newblock A graphical model framework for coupling mrfs and deformable models.
+\newblock In {\em Computer Vision and Pattern Recognition, 2004. CVPR 2004.
+  Proceedings of the 2004 IEEE Computer Society Conference on}, volume~2, pages
+  II--739. IEEE, 2004.
+
+\bibitem{Jordan99_Variational}
+Michael~I Jordan, Zoubin Ghahramani, Tommi~S Jaakkola, and Lawrence~K Saul.
+\newblock An introduction to variational methods for graphical models.
+\newblock {\em Machine learning}, 37(2):183--233, 1999.
+
+\bibitem{KaeSohn13_CRF}
+Andrew Kae, Kihyuk Sohn, Honglak Lee, and Erik Learned-Miller.
+\newblock Augmenting crfs with boltzmann machine shape priors for image
+  labeling.
+\newblock In {\em Computer Vision and Pattern Recognition (CVPR), 2013 IEEE
+  Conference on}, pages 2019--2026. IEEE, 2013.
+
+\bibitem{Kass88_Snakes}
+Michael Kass, Andrew Witkin, and Demetri Terzopoulos.
+\newblock Snakes: Active contour models.
+\newblock {\em International journal of computer vision}, 1(4):321--331, 1988.
+
+\bibitem{Lafferty01_CRFSeq}
+John Lafferty, Andrew McCallum, and Fernando~CN Pereira.
+\newblock Conditional random fields: Probabilistic models for segmenting and
+  labeling sequence data.
+\newblock In {\em Proceedings of the Eighteenth International Conference on
+  Machine Learning, p.282-289, June 28-July 01, 2001}, 2001.
+
+\bibitem{Lempitsky_BranchMin}
+Victor Lempitsky, Andrew Blake, and Carsten Rother.
+\newblock Branch-and-mincut: global optimization for image segmentation with
+  high-level priors.
+\newblock {\em Journal of Mathematical Imaging and Vision}, 44(3):315--329,
+  2012.
+
+\bibitem{Leventon00_ShapeGeodesic}
+Michael~E Leventon, W~Eric~L Grimson, and Olivier Faugeras.
+\newblock Statistical shape influence in geodesic active contours.
+\newblock In {\em Computer Vision and Pattern Recognition, 2000. Proceedings.
+  IEEE Conference on}, volume~1, pages 316--323. IEEE, 2000.
+
+\bibitem{McInerney96_MIReview}
+Tim McInerney and Demetri Terzopoulos.
+\newblock Deformable models in medical image analysis: a survey.
+\newblock {\em Medical image analysis}, 1(2):91--108, 1996.
+
+\bibitem{MumfordShah89}
+David Mumford and Jayant Shah.
+\newblock Optimal approximations by piecewise smooth functions and associated
+  variational problems.
+\newblock {\em Communications on pure and applied mathematics}, 42(5):577--685,
+  1989.
+
+\bibitem{Schlesinger13}
+Dmitrij Schlesinger.
+\newblock A continuous shape prior for mrf-based segmentation.
+\newblock In {\em Energy Minimization Methods in Computer Vision and Pattern
+  Recognition}, pages 350--361. Springer, 2013.
+
+\bibitem{Sclaroff01_RegionGroup}
+Stan Sclaroff and Lifeng Liu.
+\newblock Deformable shape detection and description via model-based region
+  grouping.
+\newblock {\em Pattern Analysis and Machine Intelligence, IEEE Transactions
+  on}, 23(5):475--489, 2001.
+
+\bibitem{Tsai03_MILevelSets}
+Andy Tsai, Anthony Yezzi~Jr, William Wells, Clare Tempany, Dewey Tucker, Ayres
+  Fan, W~Eric Grimson, and Alan Willsky.
+\newblock A shape-based approach to the segmentation of medical imagery using
+  level sets.
+\newblock {\em Medical Imaging, IEEE Transactions on}, 22(2):137--154, 2003.
+
+\bibitem{Uzunbas13_MultiOrgan}
+Mustafa~G{\"o}khan Uzunba{\c{s}}, Chao Chen, Shaoting Zhang, Kilian~M Pohl,
+  Kang Li, and Dimitris Metaxas.
+\newblock Collaborative multi organ segmentation by integrating deformable and
+  graphical models.
+\newblock In {\em Medical Image Computing and Computer-Assisted
+  Intervention--MICCAI 2013}, pages 157--164. Springer, 2013.
+
+\bibitem{Wainwright_Variational}
+Martin~J Wainwright and Michael~I Jordan.
+\newblock Graphical models, exponential families, and variational inference.
+\newblock {\em Foundations and Trends{\textregistered} in Machine Learning},
+  1(1-2):1--305, 2008.
+
+\end{thebibliography}

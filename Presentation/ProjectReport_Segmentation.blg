@@ -1,0 +1,46 @@
+This is BibTeX, Version 0.99d (TeX Live 2012/Debian)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: ProjectReport_Segmentation.aux
+The style file: plain.bst
+Database file #1: lit.bib
+You've used 20 entries,
+            2118 wiz_defined-function locations,
+            642 strings with 8249 characters,
+and the built_in function-call counts, 8196 in all, are:
+= -- 859
+> -- 323
+< -- 14
++ -- 129
+- -- 106
+* -- 554
+:= -- 1256
+add.period$ -- 70
+call.type$ -- 20
+change.case$ -- 111
+chr.to.int$ -- 0
+cite$ -- 20
+duplicate$ -- 340
+empty$ -- 669
+format.name$ -- 106
+if$ -- 1808
+int.to.chr$ -- 0
+int.to.str$ -- 20
+missing$ -- 21
+newline$ -- 103
+num.names$ -- 40
+pop$ -- 130
+preamble$ -- 1
+purify$ -- 92
+quote$ -- 0
+skip$ -- 251
+stack$ -- 0
+substring$ -- 602
+swap$ -- 117
+text.length$ -- 14
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 78
+warning$ -- 0
+while$ -- 86
+width$ -- 22
+write$ -- 234

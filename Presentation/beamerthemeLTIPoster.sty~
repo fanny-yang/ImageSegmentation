@@ -1,0 +1,199 @@
+% version: 0.4
+
+\RequirePackage{calc}
+
+\mode<presentation>
+
+
+\definecolor{TUM_blau}{rgb}{0,0.3961,0.7411}
+\definecolor{TUM_blau_1}{HTML}{003359}
+\definecolor{TUM_blau_2}{HTML}{005293}
+\definecolor{TUM_blau_3}{HTML}{0073CF}
+\definecolor{TUM_blau_4}{HTML}{64A0C8}
+\definecolor{TUM_blau_5}{HTML}{98C6EA}
+\definecolor{TUM_gruen}{HTML}{A2AD00}
+\definecolor{TUM_orange}{HTML}{E37222}
+\definecolor{TUM_elfenbein}{HTML}{DAD7CB}
+
+
+\setbeamercolor{structure}{fg=TUM_blau_2}
+\setbeamercolor{block title}{fg=TUM_blau_2}
+\setbeamerfont{block title}{size=\large,series=\bf}
+\setbeamercolor{title in headline}{fg=TUM_blau_1}
+
+\setbeamercolor{section in head/foot}{use=structure,bg=structure.fg!35!bg}
+\setbeamercolor{alerted text}{fg=structure}
+\setbeamercolor{normal text}{fg=black}
+\setbeamercolor{example text}{fg=white,bg=TUM_gruen}
+\setbeamercolor{block body example}{bg=TUM_gruen!50}
+
+%\setbeamercolor{headline}{green}
+%\setbeamercolor{separation line}{bg=green}
+%\setbeamercolor{author in head/foot}{fg=green}
+%\setbeamercolor{title in head/foot}{fg=green}
+
+
+
+
+
+
+%\mode<presentation>
+%
+%\setbeamertemplate{blocks}[rounded][shadow=true]
+%\setbeamertemplate{items}[ball]
+%\setbeamertemplate{sections/subsections in toc}[ball]
+%\setbeamertemplate{title page}[default][colsep=-4bp,rounded=true,shadow=\beamer@themerounded@shadow]
+%\setbeamertemplate{part page}[default][colsep=-4bp,rounded=true,shadow=\beamer@themerounded@shadow]
+%
+%\mode<all>
+
+
+
+  
+\ifthenelse{\boolean{posterlti@horizontal}}{% horizontal begin
+\setbeamertemplate{headline}{  
+  \leavevmode
+  \begin{beamercolorbox}[wd=\paperwidth]{headline}
+    \ifthenelse{\boolean{posterlti@titleleft}}{%
+      \begin{columns}[b]
+    }{
+      \begin{columns}[c]
+    }
+    \begin{column}{.02\paperwidth}
+    \end{column}
+      \ifthenelse{\boolean{posterlti@titleleft}}{%
+        \begin{column}{.59\paperwidth}
+          \usebeamercolor{title in headline}{\color{fg}\textbf{\Huge{\inserttitle}}}
+        \end{column}
+        \begin{column}{.25\paperwidth}
+          \raggedleft
+          \usebeamercolor{author in headline}{\color{fg}\Large{\insertauthor}}\\[1ex]
+          \usebeamercolor{institute in headline}{\color{fg}\large{\insertinstitute}}     
+        \end{column}
+      }{%
+      \begin{column}{.84\paperwidth}
+        \raggedleft
+        %\center
+        \usebeamercolor{title in headline}{\color{fg}\textbf{\Huge{\inserttitle}}\\[5ex]}
+        \usebeamercolor{author in headline}{\color{fg}\Large{\insertauthor}\\[1ex]}
+        \usebeamercolor{institute in headline}{\color{fg}\large{\insertinstitute}\\[1ex]}     
+      \end{column}
+      }
+      \begin{column}{.115\paperwidth}
+        \hfill
+        \vspace{5pt}
+        \includegraphics[width=0.9\linewidth]{berkeleyLogo}
+        \vspace{-5pt}
+      \end{column}
+      \begin{column}{.025\paperwidth}
+      \end{column}
+    \end{columns}
+  \end{beamercolorbox}
+  \vspace*{0.5cm}
+}
+  
+}% horizontal end
+{% vertical begin
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setbeamertemplate{headline}{  
+  \leavevmode
+  \begin{beamercolorbox}[wd=\paperwidth]{headline}
+    \ifthenelse{\boolean{posterlti@titleleft}}{%
+      \begin{columns}[t]
+        \begin{column}{.03\paperwidth}
+        \end{column}
+        \begin{column}{.4\paperwidth}
+          \begin{minipage}[t]{.4\paperwidth}
+            \raggedright
+            \usebeamercolor{title in headline}{\color{fg}\textbf{\LARGE{\inserttitle}}}
+          \end{minipage}  
+        \end{column}      
+        \begin{column}{.57\paperwidth}
+          \begin{columns}[b]
+            \begin{column}{.39\paperwidth}
+              \raggedleft
+              \usebeamercolor{author in headline}{\color{fg}\Large{\insertauthor}\\[1ex]}
+              \usebeamercolor{institute in headline}{\color{fg}\large{\insertinstitute}}
+            \end{column}
+            \begin{column}{.007\paperwidth}
+            \end{column}
+            \begin{column}{.14\paperwidth}
+              %\begin{center}
+                \vspace{-2.0pt}
+                \includegraphics[width=.14\paperwidth]{berkeleyLogo}
+                \vspace{-2.0pt}
+              %\end{center}
+            \end{column}
+            \begin{column}{.033\paperwidth}
+            \end{column}
+          \end{columns}
+        \end{column}  
+      \end{columns}%
+    }{%  
+      \begin{columns}[c]
+      \begin{column}{.03\paperwidth}
+      \end{column}
+         \begin{column}{.79\paperwidth}
+          \raggedleft
+          \usebeamercolor{title in headline}{\color{fg}\textbf{\LARGE{\inserttitle}}}\\[5ex]
+          \usebeamercolor{author in headline}{\color{fg}\Large{\insertauthor}}\\[1ex]
+          \usebeamercolor{institute in headline}{\color{fg}\large{\insertinstitute}}
+        \end{column}
+           
+      \begin{column}{.01\paperwidth}
+      \end{column}
+      \begin{column}{.14\paperwidth}
+        \begin{center}
+          \vspace{5pt}
+          \includegraphics[width=.14\paperwidth]{berkeleyLogo}
+          \vspace{-5pt}
+        \end{center}
+      \end{column}
+      \begin{column}{.03\paperwidth}
+      \end{column}
+    \end{columns}%
+    }
+    
+    
+    
+    
+  \end{beamercolorbox}
+  \vspace*{0.5cm}
+}
+
+}% vertical end
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\AtBeginDocument{%
+  {
+    \usebeamercolor{section in head/foot}
+  }
+  \pgfdeclareverticalshading{beamer@headline}{\paperwidth}
+  {%
+%    color(0cm)=(bg);
+%    color(120cm)=(section in head/foot.bg)%
+    color(0cm)=(section in head/foot.bg);
+    color(120cm)=(bg)%
+  }
+ \setbeamercolor{section in head/foot}{bg=}
+}
+
+\addtoheadtemplate{\pgfuseshading{beamer@headline}\vskip-118cm}{}
+
+%\setbeamersize{text margin left=1.5em,text margin right=1.5em}
+
+
+\beamertemplatenavigationsymbolsempty
+
+\mode
+<all>
+
+
+\setbeamertemplate{itemize items}[ball]
+%\setbeamertemplate{itemize item}{\raisebox{0.12ex}{$\blacktriangleright$}}
+%\setbeamertemplate{itemize subitem}{\raisebox{0.12ex}{$\triangleright$}}
+
+\setbeamerfont{itemize/enumerate body}{size=\normalsize}
+\setbeamerfont{itemize/enumerate subbody}{size=\normalsize}
+\setbeamerfont{itemize/enumerate subsubbody}{size=\normalsize}

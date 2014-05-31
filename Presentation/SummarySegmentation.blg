@@ -1,0 +1,48 @@
+This is BibTeX, Version 0.99d (TeX Live 2012/Debian)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: SummarySegmentation.aux
+The style file: plain.bst
+Database file #1: lit.bib
+Warning--I didn't find a database entry for "Malik_Superpixel"
+You've used 29 entries,
+            2118 wiz_defined-function locations,
+            705 strings with 10500 characters,
+and the built_in function-call counts, 12216 in all, are:
+= -- 1270
+> -- 536
+< -- 17
++ -- 214
+- -- 180
+* -- 872
+:= -- 1898
+add.period$ -- 100
+call.type$ -- 29
+change.case$ -- 176
+chr.to.int$ -- 0
+cite$ -- 29
+duplicate$ -- 477
+empty$ -- 952
+format.name$ -- 180
+if$ -- 2651
+int.to.chr$ -- 0
+int.to.str$ -- 29
+missing$ -- 29
+newline$ -- 148
+num.names$ -- 58
+pop$ -- 185
+preamble$ -- 1
+purify$ -- 147
+quote$ -- 0
+skip$ -- 356
+stack$ -- 0
+substring$ -- 900
+swap$ -- 156
+text.length$ -- 17
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 116
+warning$ -- 0
+while$ -- 125
+width$ -- 31
+write$ -- 337
+(There was 1 warning)

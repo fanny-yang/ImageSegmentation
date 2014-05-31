@@ -1,0 +1,13 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Previous works}{}% 2
+\BOOKMARK [1][-]{section.3}{Model}{}% 3
+\BOOKMARK [2][-]{subsection.3.1}{Variational inference approach}{section.3}% 4
+\BOOKMARK [1][-]{section.4}{Algorithm}{}% 5
+\BOOKMARK [2][-]{subsection.4.1}{EM algorithm using loopy belief propagation}{section.4}% 6
+\BOOKMARK [2][-]{subsection.4.2}{Level Set Segmentation with prior coupled with MRF}{section.4}% 7
+\BOOKMARK [1][-]{section.5}{Implementation and Results on a toy example}{}% 8
+\BOOKMARK [2][-]{subsection.5.1}{Toy Example Setting}{section.5}% 9
+\BOOKMARK [2][-]{subsection.5.2}{Implementation details}{section.5}% 10
+\BOOKMARK [2][-]{subsection.5.3}{Results and Discussion}{section.5}% 11
+\BOOKMARK [1][-]{section.6}{Summary and Outlook}{}% 12
+\BOOKMARK [1][-]{section.7}{Acknowledgements}{}% 13

@@ -1,0 +1,604 @@
+\documentclass[mathserif,final]{beamer} %
+%\documentclass[final]{beamer} %
+
+\usepackage[english]{babel}
+%\usepackage[latin1]{inputenc}
+\usepackage[ansinew]{inputenc}
+\usepackage{amsmath,amsthm, amssymb,latexsym}
+\usepackage{graphicx}
+\usepackage{setspace}
+
+\usepackage[T1]{fontenc}
+%\renewcommand{\sfdefault}{lhv}
+%\usepackage[euler-hat-accent]{eulervm}
+
+\usepackage[small,vertical,titleright]{posterlti}
+
+% -------------------- Definitionen --------------------
+\def\d{ \mathrm{d} }											% integral d
+\def\I{ \mathrm{i} }											% imaginary unit
+\def\E{ \mathrm{e} }											% e
+\def\uC{ \mathbb{T} }											% unit circle
+\def\uD{ \mathbb{D} }											% unit disk
+
+\def\H{ \mathcal{H} }											% Hilbert space
+
+\def\RN{ \mathbb{R} }											% real numbers
+\def\CN{ \mathbb{C} }											% complex numbers
+\def\ZN{ \mathbb{Z} }											% integers
+\def\NN{ \mathbb{N} }											% non-negative integers
+
+\def\bss{ \boldsymbol{s} }								% Sequence s
+\def\bssigma{ \boldsymbol{\sigma} }				% Sequence sigma
+
+\def\Tr{ \mathrm{S} }											% translation operator
+\def\Pr{ \mathrm{P} }											% projection
+
+\DeclareMathOperator*{\cls}{\overline{span}}			% closed linear span
+\DeclareMathOperator*{\argmin}{arg\, min}					% argmin
+% ------------------------------------------------------
+
+
+
+
+\title{\huge Causal Reconstruction Kernels for Consistent Signal Recovery}
+\author{\bfseries Volker Pohl, Fanny Yang and Holger Boche}
+\institute{Lehrstuhl für Theoretische Informationstechnik, Technische Universit\"at M\"unchen}
+\date{August 30$^{th}$, 2012}
+\setfootlinelti{EUSIPCO 2012 -- Session: Signal Processing Detection and Estimation}{\{volker.pohl, fanny.yang, boche\}@tum.de}
+
+
+
+
+\begin{document}
+\begin{frame}
+\begin{columns} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% COLUMN 1
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{column1lti}
+
+
+% ============================== Motivation ==============================
+\begin{blocklti}{Motivation -- Causal Reconstruction}
+
+Causal signal reconstruction is crucial
+\begin{itemize}
+\item in on-line applications
+\item feedback loops in control systems
+\item to reduce border effects in image processing, etc.
+\end{itemize}
+\end{blocklti}
+% ========================================================================
+
+
+
+
+
+
+% ============================== U-Invariant Sampling ==============================
+\begin{blocklti}{Framework -- Shift Invariant Sampling}
+
+\begin{columns}[t]
+% --- linke Spalte ---
+\begin{column}{0.5\linewidth}
+\centering
+\structure{\bfseries Non-ideal Acquisition}
+
+\begin{figure}[t]
+\begin{center}
+\begin{picture}(350,100)(50,70)
+		\thicklines
+    \put(50,120){\makebox(0,0){\footnotesize $x(t)$}}
+    \put(10,100){\vector(1,0){90}}
+    % --- Filter ---
+    \put(100,70){\line(1,0){80}}
+    \put(100,130){\line(1,0){80}}
+    \put(100,70){\line(0,1){60}}
+    \put(180,70){\line(0,1){60}}
+    \put(140,150){\makebox(0,0){\footnotesize lowpass filter}}
+    \put(140,100){\makebox(0,0){\footnotesize $h(t)$}}
+		\put(180,100){\line(1,0){80}}
+		\put(220,120){\makebox(0,0){\footnotesize $y(t)$}}
+	  % --- Sampler ---
+	  \put(260,100){\line(2,1){30}} %x=90
+	  \qbezier(263,115)(278,113)(280,100)
+	  \put(280,100){\vector(0,-1){5}}
+	  \put(290,100){\vector(1,0){50}}
+    \put(275,75){\makebox(0,0){\footnotesize $t = n a$}}
+    % --- Output ---
+    \put(350,120){\makebox(0,0){\footnotesize $c_{n} = y(n a)$}}
+\end{picture}
+\end{center}
+\end{figure}
+
+\begin{eqnarray*}
+	c_{n} &=& y(n a) = \int^{\infty}_{-\infty} h(\tau)\, x( na - \tau)\, \d\tau
+\end{eqnarray*}
+
+\end{column}
+
+% --- rechte Spalte ---
+\begin{column}{0.5\linewidth}
+\centering
+\structure{\bfseries Shift-Invariant Reconstruction}
+
+\begin{figure}[t]
+\begin{center}
+\begin{picture}(280,120)(-20,55)
+		%\linethickness{0.75mm}
+		\thicklines
+		\put(-20,100){\vector(1,0){50}}
+		\put(0,120){\makebox(0,0){\footnotesize $\{ c_{n} \}$}}
+		\put(40,100){\circle{20}}
+    \put(40,100){\makebox(0,0){$\times$}}
+    \put(40,70){\vector(0,1){20}}
+    \put(40,55){\makebox(0,0){\footnotesize $\sum_{n}\delta(t - n a)$}}
+		%
+    \put(50,100){\vector(1,0){50}}
+    % --- Filter ---
+    \put(100,70){\line(1,0){80}}
+    \put(100,130){\line(1,0){80}}
+    \put(100,70){\line(0,1){60}}
+    \put(180,70){\line(0,1){60}}
+    \put(140,150){\makebox(0,0){\footnotesize linear filter}}
+    \put(140,100){\makebox(0,0){\footnotesize $\sigma(t)$}}
+		\put(180,100){\vector(1,0){80}}
+		\put(220,120){\makebox(0,0){\footnotesize $\widetilde{x}(t)$}}
+\end{picture}
+\end{center}
+\end{figure}
+
+\begin{eqnarray*}
+	& \widetilde{x}(t) = \sum_{n\in\ZN} c_{n}\, \sigma(t - n a)
+\end{eqnarray*}
+
+\end{column}
+%
+\end{columns}
+
+\vspace{1ex}
+
+\begin{itemize}
+\item Subordinate signal space: arbitrary Hilbert space $\H$
+\item The sampling process can be described as the evaluation inner products
+\begin{equation*}
+	c_{n} = y(na) = \left\langle x, s_{n} \right\rangle\;,
+	\qquad n\in\ZN
+\end{equation*}
+\item Sampling functions $s_{n} \in \H$ have the form $s_{n} = (\mathrm{T}^{n}_{a} s)(t) = s(t-na)$
+\begin{flalign*}
+	&\text{or in general} \qquad 
+	s_{n} = \mathrm{U}^{n} s
+	\quad \text{with}\quad
+	\left\{
+	\begin{array}{l}
+		\text{generator}\ s\in\H\\
+		\mathrm{U}\ \text{unitary operator on}\ \H
+	\end{array}\right.&
+\end{flalign*}
+\item[$\Rightarrow$] Sequence $\bss = \{s_{n}\}_{n\in\ZN}$ of sampling functions forms a stationary sequence in $\H$
+\item[$\Rightarrow$] Sequence $\bss$ is characterized by its corresponding spectral density $\Phi_{\bss} \in L^{1}(\uC)$
+\begin{equation*}
+	\left\langle s_{n}, s_{m} \right\rangle
+	= \frac{1}{2\pi} \int^{\pi}_{-\pi} \E^{\I (n - m)\theta}\, \Phi_{\bss}(\E^{\I\theta})\, \d\theta
+\end{equation*}
+
+\item Sampling space: $\mathcal{S} := \cls\{ s_{n} : n\in\ZN \}$
+\end{itemize}
+
+
+% ----- Properties -----
+
+\begin{itemize}
+\item 
+
+$\bss = \{s_{n}\}_{n\in\ZN}$ is a Riesz basis for the sampling space $\mathcal{S}$
+
+\begin{tabular}{p{5.6cm}l}
+ & $\Leftrightarrow\quad$ $0  < A \leq \Phi_{\bss}(\E^{\I\theta}) \leq B < \infty$ for a.e. $\theta \in [-\pi,\pi)$
+\end{tabular}
+\end{itemize}
+
+\hrule
+
+\vspace{2ex}
+
+\begin{thebibliography}{1}
+\begin{spacing}{2.0}
+\bibitem{Unser_SP94}
+{ \footnotesize M.~Unser and A.~Aldroubi, ``{A General Sampling Theory for Nonideal Acquisition
+  Devices},'' \emph{{IEEE} Trans. Signal Process.}, vol.~42, no.~11, pp.
+  2915--2925, Nov. 1994.}
+
+\vspace{1ex}
+
+\bibitem{MPE_IEEE_SP_11}
+{ \footnotesize T.~Michaeli, V.~Pohl, and Y.~C. Eldar, ``{U-Invariant Sampling: Extrapolation
+  and Causal Interpolation from Generalized Samples},'' \emph{{IEEE} Trans.
+  Signal Process.}, vol.~59, no.~5, pp. 2085--2100, May 2011. }
+\end{spacing}
+\end{thebibliography}
+\end{blocklti}
+% ==================================================================================
+
+
+\vfill
+
+% ============================== Problem 1 ==============================
+\begin{blocklti}{Reconstruction -- Ideal World}
+
+\structure{\bfseries Assumptions}
+
+\begin{itemize}
+\item Let $x \in \mathcal{S}$ be an arbitrary signal
+\item All past and future signal samples $c_{n} = \left\langle x, s_{n}\right\rangle$, $n\in \ZN$ are known
+\end{itemize}
+
+\vspace{1ex}
+\structure{\bfseries Goal}
+
+Signal reconstruction of the form
+\begin{eqnarray*}
+	& \widetilde{x}(t) = \sum_{n\in\ZN} \left\langle x,s_{n}\right\rangle \sigma_{n}(t)
+\end{eqnarray*}
+such that
+\begin{itemize}
+\item $\widetilde{x}(t) = x(t)$ for all $x \in \mathcal{S}$ (Perfect reconstruction)
+\item $\left\langle \widetilde{x},s_{n} \right\rangle = \left\langle x,s_{n}\right\rangle$ for all $n \in \ZN$ (Consistency)
+
+\end{itemize}
+
+\vspace{1ex}
+\structure{\bfseries Solution}
+
+A well known result from frame theory states that the problem is solved by the dual Riesz basis $\{ \sigma_{n} \}_{n\in\ZN}$
+of $\{s_{n}\}_{n\in\ZN}$, given by
+
+\vspace{-2ex}
+
+\begin{gather}
+\label{equ:ncDual}
+  \sigma_{n}(t) = (\mathrm{U}^{n} \sigma)(t)\\
+	\text{with} \quad \sigma(t) = \sum_{k\in\ZN} \alpha_{k}\, s_{-k}(t)
+	\quad \text{and}\quad
+	\alpha_{k} = \frac{1}{2\pi}\int^{\pi}_{-\pi} \frac{\E^{-\I k \theta}}{\Phi_{\bss}(\E^{\I\theta})}\, \d\theta.\nonumber
+\end{gather}
+
+
+\end{blocklti}
+% =======================================================================================
+
+\vfill
+
+% ============================== PROBLEM =============================================
+\begin{colorblocklti}[yellow!90!white]
+\begin{center}
+{\bfseries Often, in reality only the past signal samples are known!}
+\end{center}
+
+\end{colorblocklti}
+% ====================================================================================
+
+\vfill
+
+
+% ============================== Causal Reconstruction ===============================
+\begin{blocklti}{Reconstruction -- Real World}
+\structure{\bfseries New Assumption}
+
+Let $\boldsymbol{c}_{0} = \{ c_{0}, c_{-1}, \dots \}$ be the past signal samples known at $t = t_{0}$
+
+\vspace{1ex}
+\structure{\bfseries Goal}
+
+%% Reconstruct the past signal component
+%% \begin{equation*}
+%% 	x_{-}(t)
+%% 	= \left\{\begin{array}{ll}
+%% 	x(t)\quad & \text{if}\ t < t_{0}\\
+%% 	0\quad & \text{if}\ t \geq t_{0}
+%% 	\end{array}\right.
+%% \end{equation*}
+%% of the signal $x(t)$ at time $t=t_{0}$ from the past signal samples $\boldsymbol{c}_{0}$ only.
+
+\vspace{1ex}
+\structure{\bfseries Naive Solution}
+\begin{equation*}
+	\widetilde{x}_{-}(t) = \sum^{\infty}_{n=0} c_{-n} \sigma_{-n}(t)\, ,
+	\quad t\leq t_{0}
+\end{equation*}
+based on the non-causal dual frame \eqref{equ:ncDual}.
+
+	
+
+
+\end{blocklti}
+% ====================================================================================
+
+
+\end{column1lti}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% column 2
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{column2lti}
+
+
+% ============================== PROBLEM =============================================
+\begin{colorblocklti}[yellow!90!white]
+\begin{center}
+{\bfseries 
+However this reconstruction is not perfect, i.e. $\widetilde{x}_{-}(t) \neq x_{-}(t)$,\\
+because we need the dual Riesz basis $\{ \zeta_{-n}\}^{\infty}_{n=0}$ of $\{ s_{-n} \}^{\infty}_{n=0}$ !}
+\end{center}
+
+\end{colorblocklti}
+% ====================================================================================
+
+
+\vfill
+
+% ============================== Main Result ==============================
+\begin{blockredlti}{Main Result -- Causal Dual Riesz Basis}
+
+\structure{\bfseries Theorem}
+Let $\bss = \{s_{n}\}_{n\in\ZN}$ be a stationary sequence in a Hilbert space $\H$ which is a Riesz basis for $\mathcal{S} = \cls\{ s_{n} : n\in\ZN\}$ and let $\Phi_{\bss}$ be
+the spectral density of $\bss$.\\
+Then $\bss_{0} = \{s_{-n}\}^{\infty}_{n=0}$ is a Riesz basis for $\mathcal{S}_{0} = \cls\{ s_{-n} : n=0,1,2,\dots\}$ and the corresponding dual Riesz basis $\{\zeta_{-n}\}^{\infty}_{n=0}$ is given by
+\begin{equation*}
+\label{equ:CausalDual}
+	\zeta_{-n} = \sum^{\infty}_{k=0} \widehat{\psi}_{n}(k)\, s_{-k}\;,
+	\quad n=0,1,2,\dots
+\end{equation*}
+
+\begin{equation*}
+\label{equ:DualFourCoef}
+	\text{with}\qquad
+	\widehat{\psi}_{n}(k) = \frac{1}{2\pi} \int^{\pi}_{-\pi} \psi_{n}(\E^{\I\theta})\, \E^{-\I k \theta}\, \d\theta\;,
+	\quad n=0,1,2,\dots
+\end{equation*}
+$\psi_{n} \in H^{2}$ are defined as
+\begin{equation*}
+\label{equ:CausalDualPsi}
+	\psi_{n}(\E^{\I\theta})
+	= \frac{1}{\Phi^{+}_{\bss}(\E^{\I\theta})}\, \Pr_{+}\left[ \frac{\E^{\I n \theta}}{\Phi^{-}_{\bss}(\E^{\I\theta})} \right]\;,
+	\quad n = 0,1,2,\dots
+\end{equation*}
+and wherein $\Phi^{+}_{\bss}$ and $\Phi^{-}_{\bss}$ are the spectral factors of $\Phi_{\bss}$.
+
+\vspace{1ex}
+\hrule
+\vspace{1ex}
+
+\structure{\bfseries Overall Causal Reconstruction Scheme}
+
+\begin{columns}[t]
+ % --- linke Spalte ---
+\begin{column}{0.4\linewidth}
+
+
+\begin{figure}[t]
+\begin{center}
+\begin{picture}(350,280)(-50,40)
+		%\linethickness{0.75mm}
+		\thicklines
+    \put(-10,320){\makebox(0,0){\footnotesize $\{c_{n}\}_{n\leq 0}$}}
+    % --- Filter oben ---
+    \put(-50,300){\vector(1,0){150}}
+    \put(70,310){\makebox(0,0){\footnotesize $c_{0}$}}
+    \put(100,270){\line(1,0){80}}
+    \put(100,330){\line(1,0){80}}
+    \put(100,270){\line(0,1){60}}
+    \put(180,270){\line(0,1){60}}
+    \put(140,300){\makebox(0,0){\footnotesize $\zeta_{0}(t)$}}
+		\put(180,300){\line(1,0){57}}
+    % --- Filter mitte ---
+    \put(35,200){\vector(1,0){65}}
+    \put(70,210){\makebox(0,0){\footnotesize $c_{-1}$}}
+    \put(100,170){\line(1,0){80}}
+    \put(100,230){\line(1,0){80}}
+    \put(100,170){\line(0,1){60}}
+    \put(180,170){\line(0,1){60}}
+    \put(140,200){\makebox(0,0){\footnotesize $\zeta_{-1}(t)$}}
+		\put(180,200){\line(1,0){70}}
+    % --- Filter unten ---
+    \put(35,100){\vector(1,0){65}}
+    \put(70,110){\makebox(0,0){\footnotesize $c_{-2}$}}
+    \put(100,70){\line(1,0){80}}
+    \put(100,130){\line(1,0){80}}
+    \put(100,70){\line(0,1){60}}
+    \put(180,70){\line(0,1){60}}
+    \put(140,100){\makebox(0,0){\footnotesize $\zeta_{-2}(t)$}}
+		\put(180,100){\line(1,0){70}}
+		% --- Shift oben ---
+		\put(35,300){\line(0,-1){30}}
+    \put(10,270){\line(1,0){50}}
+    \put(10,230){\line(1,0){50}}
+    \put(60,230){\line(0,1){40}}
+    \put(10,230){\line(0,1){40}}
+		\put(35,250){\makebox(0,0){\footnotesize $z^{-1}$}}
+		% --- Shift mitte ---
+		\put(35,230){\line(0,-1){60}}
+    \put(10,170){\line(1,0){50}}
+    \put(10,130){\line(1,0){50}}
+    \put(60,130){\line(0,1){40}}
+    \put(10,130){\line(0,1){40}}
+		\put(35,150){\makebox(0,0){\footnotesize $z^{-1}$}}
+		% --- punkt punkt punkt ---
+		\put(35,130){\line(0,-1){60}}
+		\put(35,50){\makebox(0,0){\vdots}}
+		\put(140,50){\makebox(0,0){\vdots}}
+		\put(250,50){\makebox(0,0){\vdots}}
+		% --- Summe ---
+		\put(250,300){\circle{26}}
+    \put(250,300){\makebox(0,0){$+$}}
+    \put(250,287){\line(0,-1){217}}
+    \put(263,300){\vector(1,0){50}}
+    \put(290,320){\makebox(0,0){\footnotesize $\widetilde{x}_{-}(t)$}}
+\end{picture}
+\end{center}
+\end{figure}
+\end{column}
+
+
+% --- rechte Spalte ---
+\begin{column}{0.6\linewidth}
+
+\vspace{-1ex}
+
+
+\begin{itemize}
+
+\item Reconstructed past signal
+
+\vspace{-2ex}
+
+\begin{eqnarray*}
+\label{equ:Reconstr}
+	& \widetilde{x}_{-}(t)
+	= \sum_{n\leq 0} c_{-n}\, \zeta_{-n}(t)\;,
+	\quad t\leq t_{0}
+\end{eqnarray*}
+
+
+\item Each reconstruction kernel $\zeta_{-n}(t)$ has a different shape  
+\item Each sampling value corresponds to the weighting of the respective kernel
+\end{itemize}
+\end{column}
+
+\end{columns}
+
+
+\end{blockredlti}
+% ===================================================================================================================
+
+
+\vfill
+
+
+% ======================================== EXAMPLE - CAUSAL SPLINE INTERPOLATION ========================================
+\begin{examplelti}[Example -- Causal Spline Reconstruction]
+
+\structure{\bfseries Practical Assumptions}
+
+\vspace{-2ex}
+
+% ----- Bild Spline -----
+\begin{columns}[t]
+ % --- linke Spalte ---
+ \begin{column}{0.5\linewidth}
+ 
+ \begin{itemize}
+ \item Shift-invariant sampling in $L^{2}(\RN)$ with period $a=1$: $(\mathrm{U}^ns)(t) = s(t-n)$
+ \item Impulse response $s(t)$ is a B-spline of 2nd degree as a model of a non-ideal lowpass
+ \end{itemize}
+ \begin{figure}[t]
+  \centering
+  \includegraphics[width=150mm]{Gr_TP2.pdf}
+ \end{figure}
+
+ \end{column}
+
+ % --- rechte Spalte ---
+ \begin{column}{0.5\linewidth}
+  \begin{figure}[t]
+  \centering
+  \includegraphics[width=182mm]{Gr_Spline22.pdf}
+  \label{Generators}
+ \end{figure}
+ {\footnotesize $s(t)$: generator of the sampling functions\\[-0.5ex]
+ $\sigma(t)$: generator of the non-causal dual basis}
+ \end{column}
+
+\end{columns}
+
+
+
+% ---- Vergleich - Kerne -----
+\vspace{1ex}
+\hrule
+\vspace{1ex}
+\structure{\bfseries Causal versus Non-causal Reconstruction Kernels}
+
+\begin{columns}[t]
+ % --- linke Spalte ---
+ \begin{column}{0.55\linewidth}
+  \begin{itemize}
+  \item Dashed lines: truncated non-causal reconstruction kernels
+  \begin{equation*}
+     \sigma_{-n}(t)
+     = \sum_{k\in\ZN} \alpha_{k}\, s_{-k}(t+n)
+  \end{equation*}
+  \item Solid lines: causal reconstruction kernels
+  \begin{equation*}
+   \zeta_{-n}(t) = \sum^{\infty}_{k=0} \widehat{\psi}_{n}(k)\, s_{-k}(t)
+  \end{equation*}
+  \item For large $n$, the causal kernel $\zeta_{-n}(t)$ converges to non-causal kernel $\sigma_{-n}(t)$
+  \begin{equation*}
+  	\zeta_{-n} \to \sigma_{-n}
+  	\quad\text{as}\quad
+  	n \to \infty
+  \end{equation*}
+  \end{itemize}
+ \end{column}
+
+ \begin{column}{0.45\linewidth}
+  \vspace{-4ex}
+  \begin{figure}[t]
+  \centering
+  \includegraphics[width=160mm]{Gr_Kernels2.pdf}
+  \end{figure}
+ \end{column}
+
+\end{columns}
+ 
+
+
+% ---- Figure - Reconstruction -----
+\vspace{1ex}
+\hrule
+\vspace{1ex}
+\structure{\bfseries Signal Reconstruction -- Causal versus Non-causal }
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=290mm]{Gr_Signal3.pdf}
+\end{figure}
+
+\vspace{-4ex}
+
+\begin{equation*}
+	\widetilde{x}^{\mathrm{ NC}}_{-}(t)
+	= \sum^{\infty}_{n=0} \left\langle x, s_{-n} \right\rangle \sigma_{-n}(t)
+	\qquad\text{and}\qquad
+	\widetilde{x}^{\mathrm{ C}}_{-}(t)
+	= \sum^{\infty}_{n=0} \left\langle x, s_{-n} \right\rangle \zeta_{-n}(t)	
+\end{equation*}
+
+\begin{itemize}
+\item Significant differences close to the border
+\item Causal and non-causal reconstruction coincide at the distant past $t \to -\infty$
+\end{itemize}
+
+\end{examplelti}
+% ===================================================================================================================
+
+
+
+\end{column2lti}
+
+\end{columns}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\bibliographystyle{IEEEtran}
+%\bibliography{IEEEabrv,../publications,../pub_Pohl,../pub_Books}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}
+

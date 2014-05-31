@@ -1,0 +1,239 @@
+% style file for posters
+% verion: 0.3
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{posterlti}
+
+\RequirePackage{ifthen}
+
+\def\posterlti@scale{1.4}
+\DeclareOption{small}{\def\posterlti@scale{1.3}}
+\newboolean{posterlti@horizontal}
+\setboolean{posterlti@horizontal}{false}
+\DeclareOption{horizontal}{\setboolean{posterlti@horizontal}{true}}
+\DeclareOption{vertical}{\setboolean{posterlti@horizontal}{false}}
+\DeclareOption{landscape}{\setboolean{posterlti@horizontal}{true}}
+\DeclareOption{portrait}{\setboolean{posterlti@horizontal}{false}}
+\newboolean{posterlti@titleleft}
+\setboolean{posterlti@titleleft}{false}
+\DeclareOption{titleleft}{\setboolean{posterlti@titleleft}{true}}
+\DeclareOption{titleright}{\setboolean{posterlti@titleleft}{false}}
+\ProcessOptions\relax
+
+
+
+% redefine environment, because of spacing problems with the original definition in 
+% beamerbasecolor.sty (possible BUG?); added 2 lines.
+\renewenvironment{beamercolorbox}[2][]{%
+  \begingroup%
+    \def\beamer@colbox@coladd{0pt}%
+    \def\beamer@vmode{\leavevmode}%
+    \setkeys{beamercolbox}{%
+      wd=\textwidth,ht={},dp={},%
+      leftskip=0pt,rightskip=0pt plus1fil,%
+      sep=0pt,colsep=0pt,colsep*=0pt,%
+      shadow=false,rounded=false,ignorebg=false}%
+    \setkeys{beamercolbox}{#1}%
+    \ifbeamercolorempty[bg]{#2}{\@tempswafalse}{\@tempswatrue}%
+    \ifbeamer@colbox@ignorebg\@tempswafalse\fi%
+    \def\beamer@colbox@color{#2}%
+    \hsize=\beamer@colbox@wd%
+    \setbox\beamer@tempbox=\hbox\bgroup\vbox\bgroup%
+      \leftskip=\beamer@colbox@ls%
+      \advance\leftskip by\beamer@colbox@sep%
+      \rightskip=\beamer@colbox@rs%
+      \advance\rightskip by\beamer@colbox@sep%
+      \ifbeamer@colbox@ignorebg%
+        \colorlet{beamer@temp@color}{bg}%
+        \usebeamercolor[fg]{#2}%
+        \colorlet{bg}{beamer@temp@color}%
+      \else%
+        \usebeamercolor[fg]{#2}%
+      \fi%
+      \if@tempswa%
+        \advance\leftskip by\beamer@colbox@colsep%
+        \advance\rightskip by\beamer@colbox@colsep%
+        \ifdim\beamer@colbox@colsep=0pt\else\vskip\beamer@colbox@colsep\fi%
+        \ifdim\beamer@colbox@colseps=0pt\else\vskip\beamer@colbox@colseps\fi%
+      \fi%
+      \ifdim\beamer@colbox@sep=0pt\else\vskip\beamer@colbox@sep\fi%
+      \beamer@vmode\ignorespaces}{%
+      \ifdim\beamer@colbox@sep=0pt\else\vskip\beamer@colbox@sep\fi%
+      \if@tempswa\ifdim\beamer@colbox@colsep=0pt\else\vskip\beamer@colbox@colsep\fi\fi%
+      \if@tempswa\ifdim\beamer@colbox@colseps=0pt\else\vskip\beamer@colbox@colseps\fi\fi%
+    \egroup\egroup%
+    \wd\beamer@tempbox=\hsize%
+    \@tempdima=\wd\beamer@tempbox%
+    \ifx\beamer@colbox@ht\@empty%
+    \else%
+      \ht\beamer@tempbox=\beamer@colbox@ht%
+    \fi%
+    \ifx\beamer@colbox@dp\@empty%
+    \else%
+      \dp\beamer@tempbox=\beamer@colbox@dp%
+    \fi%
+    \ifbeamer@colbox@rounded%
+      \if@tempswa%
+        \begin{beamerboxesrounded}[%
+          shadow=\beamer@colbox@shadow,%
+          lower=\beamer@colbox@color,%
+          upper=normal text,%
+          width=\beamer@colbox@wd]{}%
+          \box\beamer@tempbox%
+        \end{beamerboxesrounded}%
+      \else%
+        \ifdim\@tempdima>\textwidth%
+          \setbox\beamer@tempbox=\hbox to\textwidth{\hss\box\beamer@tempbox\hss}%
+        \fi%
+        \box\beamer@tempbox%
+      \fi%
+    \else%
+      \if@tempswa\setbox\beamer@tempbox=\vbox{%
+        \usebeamercolor{\beamer@colbox@color}%
+        \advance\hsize by \beamer@colbox@colseps\relax%
+        \advance\hsize by \beamer@colbox@colseps\relax%
+        \hskip-\beamer@colbox@colseps%
+        \fboxsep=0pt\colorbox{bg}{%
+          \hskip\beamer@colbox@colseps%
+          \hbox{\box\beamer@tempbox}%
+          \hskip\beamer@colbox@colseps%
+        }%
+        \hskip-\beamer@colbox@colseps%
+        \advance\hsize by -\beamer@colbox@colseps\relax% %UM
+        \advance\hsize by -\beamer@colbox@colseps\relax% %UM
+      }\fi%
+      \ifdim\@tempdima>\textwidth%
+        \setbox\beamer@tempbox=\hbox to\textwidth{\hskip0pt minus\beamer@leftmargin\relax\box\beamer@tempbox\hskip0pt minus\beamer@rightmargin\relax}%
+      \fi%
+      \box\beamer@tempbox%
+    \fi%
+  \endgroup%
+}
+
+
+
+\RequirePackage{roundboxlti}
+
+
+
+\newlength{\columnheight}
+
+\ifthenelse{\boolean{posterlti@horizontal}}{ % horizontal begin
+  
+  \mode<presentation> {
+    \usetheme{LTIPoster}    
+  }
+
+\RequirePackage[orientation=landscape,size=a0,scale=\posterlti@scale%,debug
+]{beamerposter}                       % e.g. for DIN-A0 poster
+%\usepackage[orientation=portrait,size=a1,scale=1.4,grid,debug]{beamerposter}                  % e.g. for DIN-A1 poster, with optional grid and debug output
+%\usepackage[size=custom,width=200,height=120,scale=2,debug]{beamerposter}                     % e.g. for custom size poster
+%\usepackage[orientation=portrait,size=a0,scale=1.0,printer=rwth-glossy-uv.df]{beamerposter}   % e.g. for DIN-A0 poster with rwth-glossy-uv printer check
+% ...
+%
+
+\setlength{\columnheight}{70.5cm}
+
+
+\newenvironment{column1lti}{%
+\hskip0.005\paperwidth%
+\begin{column}{.332\paperwidth}%
+\centering%
+\begin{minipage}[t][\columnheight]{.93\textwidth}%
+}{%
+\end{minipage}%
+\end{column}%
+\hskip-0.005\paperwidth%
+}
+
+\newenvironment{column2lti}{%
+\begin{column}{.332\paperwidth}%
+\centering%
+\begin{minipage}[t][\columnheight]{.93\textwidth}%
+}{%
+\end{minipage}%
+\end{column}%
+}
+
+\newenvironment{column3lti}{%
+\hskip-0.005\paperwidth%
+\begin{column}{.332\paperwidth}%
+\centering%
+\begin{minipage}[t][\columnheight]{.93\textwidth}%
+}{%
+\end{minipage}%
+\end{column}%
+\hskip0.005\paperwidth%
+}
+
+}% horizontal end
+{% vertical begin
+  
+  \mode<presentation> {
+    \usetheme{LTIPoster} 
+  }
+
+\RequirePackage[orientation=portrait,size=a0,scale=\posterlti@scale%,debug
+]{beamerposter}                       % e.g. for DIN-A0 poster
+%\usepackage[orientation=portrait,size=a1,scale=1.4,grid,debug]{beamerposter}                  % e.g. for DIN-A1 poster, with optional grid and debug output
+%\usepackage[size=custom,width=200,height=120,scale=2,debug]{beamerposter}                     % e.g. for custom size poster
+%\usepackage[orientation=portrait,size=a0,scale=1.0,printer=rwth-glossy-uv.df]{beamerposter}   % e.g. for DIN-A0 poster with rwth-glossy-uv printer check
+% ...
+%
+
+\setlength{\columnheight}{105cm}
+
+
+\newenvironment{column1lti}{%
+\hskip0.005\paperwidth%
+\begin{column}{.4985\paperwidth}%
+\centering%
+\begin{minipage}[t][\columnheight]{.92\textwidth}%
+}{%
+\end{minipage}%
+\end{column}%
+\hskip-0.005\paperwidth%
+}
+
+\newenvironment{column2lti}{%
+\hskip-0.005\paperwidth%
+\begin{column}{.4985\paperwidth}%
+\centering%
+\begin{minipage}[t][\columnheight]{.92\textwidth}%
+}{%
+\end{minipage}%
+\end{column}%
+\hskip0.005\paperwidth%
+}
+ 
+}% vertical end
+
+
+
+
+\newcommand{\setfootlinelti}[2]{
+  \setbeamertemplate{footline}{
+    \leavevmode%
+    \begin{beamercolorbox}[wd=\paperwidth]{headline}
+      \begin{columns}[T]
+        \begin{column}{.02\paperwidth}
+        \end{column}
+        \begin{column}{.62\paperwidth}
+          \parbox[T][14ex][c]{.62\paperwidth}{
+          \usebeamercolor{author in headline}{\color{fg}\Large{#1}
+          }}
+        \end{column}
+        \begin{column}{.32\paperwidth}
+          \parbox[T][14ex][c]{.32\paperwidth}{ \hfill
+          \Large{#2}} %\includegraphics[height=12ex]{}
+        \end{column}
+        \begin{column}{.025\paperwidth}
+        \end{column}
+      \end{columns}
+    \end{beamercolorbox}
+  }
+}
+
+
+\endinput
+

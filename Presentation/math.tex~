@@ -1,0 +1,86 @@
+\usepackage{mathtools}
+\usepackage{amssymb, amsthm}
+
+\usepackage{microtype}
+\usepackage{enumerate}
+\usepackage{mathrsfs}
+\usepackage{xcolor}
+\usepackage{graphicx}
+
+\theoremstyle{plain}
+
+% ---------- Definitionen ----------
+%\def\Indi{ \mathbbm{1} }
+\newcommand{\Indi}{\mathbbm{1}}
+\def\d{ \mathrm{d} }                                % integral d
+\def\I{ \mathrm{i} }                                % imaginary unit
+\def\E{ \mathrm{e} }                                % e
+
+\def\NN{ \mathbb{N} }                               % positive integers
+\def\ZN{ \mathbb{Z} }                               % integers
+\def\RN{ \mathbb{R} }                               % real numbers
+\def\CN{ \mathbb{C} }                               % complex numbers
+\def\TT{ \mathbb{T} }
+\def\EE{ \mbox{ }\mathbb{E}\mbox{ } }
+
+\def\uD{ \mathbb{D} }                               % unit disk
+\def\uC{ \mathbb{T} }                               % unit circle
+\def\uDD{ \overline{\mathbb{D}} }       % closed unit disk
+
+% Fields, sigma- algebras
+\def\P{ \mathcal{P} }                               % Polynomials
+\def\H{ \mathcal{H} }                               % Hilbert space
+\def\S{ \mathcal{S} }                               % Sampling space
+\def\F{ \mathcal{F} }
+\def\A{ \mathcal{A} }
+\def\M{ \mathcal{M} }
+\def\L{ \mathcal{L} }
+
+\def\Do{ \mathscr{D} }                          % Domain
+\def\Ra{ \mathscr{R} }                          % Range
+\def\NS{ \mathscr{N} }                          % null space
+
+\def\bc{ \mathbf{c} }                               % bold c
+\def\bd{ \mathbf{d} }                               % bold d
+\def\bs{ \mathbf{s} }                               % bold s
+\def\bw{ \mathbf{w} }                               % bold w
+\def\bv{ \mathbf{v} }                               % bold v
+\def\bx{ \mathbf{x} }
+\def\bgamma{ \boldsymbol\gamma }        % bold gamma
+
+\def\A{ \mathcal{A} }                               % Disk algebra
+\def\X{ \mathcal{X} }
+\def\sinc{ \mathrm{sinc} }                          % sinc
+\def\B{ \mathcal{B} }                               % Set of feasible signals
+\def\C{ \mathcal{C} }                               % Set of feasible signals
+
+\def\eps{ \epsilon }
+\def\beq{ \begin{equation} }
+\def\eeq{ \end{equation} }
+\def\beqs{ \begin{equation*} }
+\def\eeqs{ \end{equation*} }
+\def\bthm{ \begin{theorem} }
+\def\ethm{ \end{theorem} }
+\def\begindef{ \begin{definition} }
+\def\enddef{ \end{definition} }
+\def\benum{ \begin{enumerate} }
+\def\eenum{ \end{enumerate} }
+\def\bproof{ \begin{proof} }
+\def\eproof{ \end{proof} }
+\def\pfeil{ \rightarrow }
+\def\balign{ \begin{align} }
+\def\ealign{ \end{align} }
+
+\def\hft{ h^{\text{ft}} }
+\def\gft{ g^{\text{ft}} }
+\def\fft{ f^{\text{ft}} }
+\def\Kft{ K^{\text{ft}} }
+%\newcommand{\EE}[1]{{\mathbb E} \! \left\{ #1 \right\}} % Expectation
+
+\DeclareMathOperator*{\cls}{\overline{span}}
+\DeclareMathOperator*{\argmin}{arg\, min}
+\DeclareMathOperator*{\trace}{trace}
+\DeclareMathOperator*{\diag}{diag}
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\supp}{supp}
+\DeclareMathOperator*{\divop}{div}
